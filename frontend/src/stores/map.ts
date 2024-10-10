@@ -1,9 +1,12 @@
 import { defineStore } from 'pinia';
+import { Expedition, ExpeditionStore } from 'src/models';
+import expeditionsDef from 'assets/expeditions.json';
 
 export const useMapStore = defineStore('map', () => {
 
   const map = ref<WE.Map | null>(null);
   const tileLayer = ref<string>('osm');
+  const selectedExpedition = ref<Expedition | null>(null)  
 
   function initialize(id: string) {
     map.value = new WE.map(id, {
@@ -13,19 +16,21 @@ export const useMapStore = defineStore('map', () => {
     applyTileLayer();
     tileLayer.value = 'satellite';
     applyTileLayer();
-
-    initMosaic();
+    (expeditionsDef as ExpeditionStore).expeditions.forEach((exp: Expedition) => initExpedition(exp));
   }
 
-  function initMosaic() {
+  function initExpedition(expedition: Expedition) {
     const marker = WE.marker([85.0610662, 136.9671595]).addTo(map.value);
-    marker.bindPopup('<b>MOSAiC</b><br>Multidisciplinary drifting Observatory for the Study of Arctic Climate', {maxWidth: 150, closeButton: true}).openPopup();
+    //marker.bindPopup('<b>MOSAiC</b><br>Multidisciplinary drifting Observatory for the Study of Arctic Climate', {maxWidth: 150, closeButton: true}).openPopup();
+    marker.on('click', function() {
+      selectedExpedition.value = expedition;
+    });
 
     const polygonA = WE.polygon([[49.5608, 5.811], [49.986, 5.723],
       [50.190, 6.086], [49.781, 6.536], [49.468, 6.372], [49.560, 5.811]]
             );
     polygonA.addTo(map.value);
-}
+  }
 
   function applyTileLayer() {
     if (tileLayer.value === 'osm') {
@@ -49,6 +54,7 @@ export const useMapStore = defineStore('map', () => {
   return {
     map,
     tileLayer,
+    selectedExpedition,
     initialize,
     panTo,
     applyTileLayer,
