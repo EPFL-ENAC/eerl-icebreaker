@@ -1,0 +1,28 @@
+[
+  {
+    "title": "EPFL",
+    "caption": "epfl.ch",
+    "icon": "school",
+    "link": "https://epfl.ch"
+  },
+  {
+    "title": "EERL",
+    "caption": "epfl.ch/labs/eerl",
+    "icon": "engineering",
+    "contribution": "Extreme Environments Research Laboratory",
+    "link": "https://www.epfl.ch/labs/eerl"
+  },
+  {
+    "title": "ENAC IT4R",
+    "caption": "go.epfl.ch/it4r",
+    "icon": "construction",
+    "contribution": "it4r_contrib",
+    "link": "https://www.epfl.ch/schools/enac/about/data-at-enac/enac-it4research/"
+  },
+  {
+    "title": "source_code",
+    "caption": "EPFL-ENAC/eerl-icebraker",
+    "icon": "code",
+    "link": "https://github.com/EPFL-ENAC/eerl-icebraker"
+  }
+]
