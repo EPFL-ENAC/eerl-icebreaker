@@ -9,7 +9,7 @@ declare module '@vue/runtime-core' {
   }
 }
 
-window.CESIUM_BASE_URL = '/cesium';
+window.CESIUM_BASE_URL = 'cesium';
 if (process.env.CESIUM_ACCESS_TOKEN) {
   Ion.defaultAccessToken = process.env.CESIUM_ACCESS_TOKEN;
 }
