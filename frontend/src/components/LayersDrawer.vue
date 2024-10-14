@@ -26,7 +26,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-
+const mapStore = useMapStore();
 
 const tileLayers = [
   { value: 'satellite', label: 'Satellite' },
