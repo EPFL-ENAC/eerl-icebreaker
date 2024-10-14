@@ -20,15 +20,27 @@ export const useMapStore = defineStore('map', () => {
   }
 
   function initExpedition(expedition: Expedition) {
-    const marker = WE.marker([85.0610662, 136.9671595]).addTo(map.value);
-    //marker.bindPopup('<b>MOSAiC</b><br>Multidisciplinary drifting Observatory for the Study of Arctic Climate', {maxWidth: 150, closeButton: true}).openPopup();
+    const start = expedition.start_location;
+    const end = expedition.end_location ? expedition.end_location : start;
+    console.log(start, end);
+
+    const marker = WE.marker(start).addTo(map.value);
+    WE.marker(end).addTo(map.value);
     marker.on('click', function() {
       selectedExpedition.value = expedition;
     });
 
-    const polygonA = WE.polygon([[49.5608, 5.811], [49.986, 5.723],
-      [50.190, 6.086], [49.781, 6.536], [49.468, 6.372], [49.560, 5.811]]
-            );
+    const polygonA = WE.linestring([
+        start,
+        end,
+      ], {
+        color: '#ff0',
+        opacity: 1,
+        fillColor: '#f00',
+        fillOpacity: 0.1,
+        editable: false,
+        weight: 2
+    });
     polygonA.addTo(map.value);
   }
 

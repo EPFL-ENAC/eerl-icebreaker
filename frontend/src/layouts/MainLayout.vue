@@ -41,7 +41,7 @@ import HelpDrawer from 'src/components/HelpDrawer.vue';
 
 const helpStore = useHelpStore();
 
-const leftDrawerOpen = ref(true);
+const leftDrawerOpen = ref(false);
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;

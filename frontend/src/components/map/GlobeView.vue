@@ -1,16 +1,41 @@
 <template>
-  <div id="earth_div"
-    class="bg-black"
-    style="
+  <div>
+    <div class="bg-white float-left"
+      style="
       position: absolute;
-      top: 0;
-      bottom: 0;
-      height: 100%;
-      width: 100%;
-      z-index: 0;
-      overflow: hidden;
-    ">
-
+      top: 0px;
+      right: auto;
+      bottom: auto;
+      left: 0;
+      z-index: 1000;">
+      <q-list>
+        <q-item>
+          <q-btn
+            flat
+            no-caps
+            color="primary"
+            size="12px"
+            icon="arrow_upward"
+            :label="$t('fly_to_arctic')"
+            @click="mapStore.panTo([90, 0])"
+            align="left"
+          />
+        </q-item>
+        <q-item>
+          <q-btn
+            flat
+            no-caps
+            color="primary"
+            size="12px"
+            icon="arrow_downward"
+            :label="$t('fly_to_antarctic')"
+            @click="mapStore.panTo([-90, 0])"
+            align="left"
+          />
+        </q-item>
+      </q-list>
+    </div>
+    <div id="globe" />
   </div>
 </template>
 
@@ -19,7 +44,7 @@
 const mapStore = useMapStore();
 
 onMounted(() => {
-  mapStore.initialize('earth_div');
+  mapStore.initialize('globe');
 });
 
 </script>

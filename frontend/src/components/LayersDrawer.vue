@@ -1,36 +1,9 @@
 <template>
   <div>
-    <q-list>
+    <q-list class="q-mt-md">
       <q-item-label header>
         
       </q-item-label>
-      <q-item>
-        <q-btn
-          flat
-          no-caps
-          color="primary"
-          size="12px"
-          icon="arrow_upward"
-          :label="$t('fly_to_arctic')"
-          @click="mapStore.panTo([90, 0])"
-          align="left"
-          class="full-width"
-        />
-      </q-item>
-      <q-item>
-        <q-btn
-          flat
-          no-caps
-          color="primary"
-          size="12px"
-          icon="arrow_downward"
-          :label="$t('fly_to_antarctic')"
-          @click="mapStore.panTo([-90, 0])"
-          align="left"
-          class="full-width"
-        />
-      </q-item>
-
       <q-item>
         <q-select
           v-model="mapStore.tileLayer"
