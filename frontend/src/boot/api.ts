@@ -1,11 +1,18 @@
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
+import { Ion } from 'cesium';
+import { I } from 'app/dist/spa/assets/index.6a43cd0f';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
     $api: AxiosInstance;
   }
+}
+
+window.CESIUM_BASE_URL = '/cesium';
+if (process.env.CESIUM_ACCESS_TOKEN) {
+  Ion.defaultAccessToken = process.env.CESIUM_ACCESS_TOKEN;
 }
 
 const cdnUrl = 'https://enacit4r-cdn.epfl.ch/';

@@ -1,7 +1,7 @@
 <template>
   <q-layout view="hHh lpR fFf">
     <q-header bordered class="bg-white text-grey-10">
-      <app-toolbar @toggle="toggleLeftDrawer" />
+      <app-toolbar @toggle="toggleLeftDrawer" no-menu />
     </q-header>
 
     <q-drawer

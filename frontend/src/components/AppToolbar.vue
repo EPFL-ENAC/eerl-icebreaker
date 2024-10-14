@@ -1,6 +1,7 @@
 <template>
   <q-toolbar>
     <q-btn
+      v-if="!noMenu"
       flat
       dense
       round
@@ -33,27 +34,6 @@
     <q-btn v-if="$q.screen.lt.md" flat round icon="more_vert">
       <q-popup-proxy>
         <q-list class="bg-white">
-          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/">
-            <q-item-section>
-              <q-item-label>{{ $t('home') }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item v-if="$q.screen.lt.sm" clickable v-close-popup to="/catalog">
-            <q-item-section>
-              <q-item-label>{{ $t('catalog') }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-item
-            v-if="$q.screen.lt.sm"
-            clickable
-            v-close-popup
-            to="/contribute"
-          >
-            <q-item-section>
-              <q-item-label>{{ $t('contribute') }}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator v-if="$q.screen.lt.sm" />
           <q-item clickable v-close-popup @click="showResources = true">
             <q-item-section>
               <q-item-label>{{ $t('resources') }}</q-item-label>

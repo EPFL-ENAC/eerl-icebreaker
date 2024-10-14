@@ -17,7 +17,7 @@
             size="12px"
             icon="arrow_upward"
             :label="$t('fly_to_arctic')"
-            @click="panTo([90, 0])"
+            @click="flyTo([90, 0])"
             align="left"
           />
         </q-item>
@@ -29,7 +29,7 @@
             size="12px"
             icon="arrow_downward"
             :label="$t('fly_to_antarctic')"
-            @click="panTo([-90, 0])"
+            @click="flyTo([-90, 0])"
             align="left"
           />
         </q-item>
@@ -40,72 +40,95 @@
 </template>
 
 <script setup lang="ts">
+import { Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined } from 'cesium';
+import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { Expedition, ExpeditionStore } from 'src/models';
 
 const mapStore = useMapStore();
 
-const globe = ref<WE.Map | null>(null);
+const globe = ref<Viewer | null>(null);
 
 onMounted(() => {
   initialize('globe');
 });
 
-watch(() => mapStore.tileLayer, () => {
-  applyTileLayer();
-});
+watch(
+  () => mapStore.selectedExpedition,
+  () => {
+    if (!mapStore.selectedExpedition && globe.value) {
+      // apply deselection
+      globe.value.selectedEntity = undefined;
+    }
+  },
+);
 
 function initialize(id: string) {
-  globe.value = new WE.map(id, {
-    center: [90, 0],
-    altitude: 15000000,
+  globe.value = new Viewer(id, {
+    animation: false,
+    baseLayerPicker: true,
+    fullscreenButton: false,
+    geocoder: false,
+    homeButton: false,
+    infoBox: false,
+    sceneModePicker: false,
+    selectionIndicator: false,
+    timeline: false,
+    navigationHelpButton: false,
+    navigationInstructionsInitiallyVisible: false,
+    scene3DOnly: true,
+    shouldAnimate: true,
+    //skyBox: false,
+    //skyAtmosphere: false,
+    vrButton: false,
   });
-  applyTileLayer();
-  mapStore.tileLayer = 'satellite';
-  applyTileLayer();
+  flyTo([90, 0], 0);
   (mapStore.expeditionsDef as ExpeditionStore).expeditions.forEach((exp: Expedition) => initExpedition(exp));
 }
 
 function initExpedition(expedition: Expedition) {
+  if (!globe.value) return;
   const start = expedition.start_location;
   const end = expedition.end_location ? expedition.end_location : start;
   console.log(start, end);
 
-  const marker = WE.marker(start).addTo(globe.value);
-  WE.marker(end).addTo(globe.value);
-  marker.on('click', function() {
-    mapStore.selectedExpedition = expedition;
+  globe.value.entities.add({
+    name: expedition.acronym,
+    position: Cartesian3.fromDegrees(start[1], start[0]),
+    point: {
+      pixelSize: 20,
+      color: Color.YELLOW,
+    },
   });
 
-  const polygonA = WE.polygon([
-      start,
-      end,
-    ], {
-      color: '#ff0',
-      opacity: 1,
-      fillColor: '#f00',
-      fillOpacity: 0.1,
-      editable: false,
-      weight: 2
+  globe.value.selectedEntityChanged.addEventListener(function(selectedEntity) {
+    if (defined(selectedEntity) && defined(selectedEntity.name) && selectedEntity.name === expedition.acronym) {
+      console.log('Selected ' + selectedEntity.name);
+      console.log(selectedEntity);
+      mapStore.selectedExpedition = expedition;
+    } else {
+      console.log('Deselected.');
+    }
   });
-  polygonA.addTo(globe.value);
+
+  globe.value.entities.add({
+    name: `${expedition.acronym}-track`,
+    polyline: {
+      positions: Cartesian3.fromDegreesArray([start[1], start[0], end[1], end[0]]),
+      width: 3,
+      material: new PolylineOutlineMaterialProperty({
+        color: Color.ORANGE,
+        outlineWidth: 1,
+        outlineColor: Color.BLACK,
+      }),
+    },
+  });
 }
 
-function applyTileLayer() {
-  if (mapStore.tileLayer === 'osm') {
-    WE.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(globe.value);
-  } else if (mapStore.tileLayer === 'satellite') {
-    WE.tileLayer('https://webglearth.github.io/webglearth2-offline/{z}/{x}/{y}.jpg', {
-      tileSize: 256,
-      bounds: [[-85, -180], [85, 180]],
-      minZoom: 0,
-      maxZoom: 16,
-      attribution: 'EPFL EERL',
-      tms: true
-    }).addTo(globe.value);
-  }
-}
-
-function panTo(coords: [number, number]) {
-  globe.value.panTo(coords);
+function flyTo(coords: [number, number], duration = 3) {
+  if (!globe.value) return;
+  globe.value.camera.flyTo({
+    destination: Cartesian3.fromDegrees(coords[1], coords[0], 15000000),
+    duration,
+  });
 }
 </script>
