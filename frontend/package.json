@@ -17,6 +17,7 @@
     "@types/geojson": "^7946.0.14",
     "@zip.js/zip.js": "^2.7.52",
     "axios": "^1.7.2",
+    "cesium": "^1.122.0",
     "lorem-ipsum": "^2.0.8",
     "papaparse": "^5.4.1",
     "pinia": "^2.1.7",

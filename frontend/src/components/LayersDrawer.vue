@@ -14,7 +14,6 @@
           map-options
           emit-value
           class="full-width"
-          @update:model-value="mapStore.applyTileLayer"
         />
       </q-item>
     </q-list>
