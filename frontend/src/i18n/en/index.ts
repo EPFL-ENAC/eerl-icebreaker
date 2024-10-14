@@ -12,8 +12,9 @@ export default {
   fly_to_arctic: 'Fly to Arctic',
   fly_to_antarctic: 'Fly to Antarctic',
   base_map: 'Base map',
-  instrument_measures: 'Instrument & Measures',
+  instrument_measures: 'Instruments & Measures',
   fundings: 'Fundings',
   dates: 'Dates',
   location: 'Location',
+  track: 'Track',
 };

@@ -15,6 +15,15 @@ export interface Instrument {
   measures: Measures[];
 }
 
+export interface ExpeditionTrack {
+  file: string;
+  columns: {
+    latitude: string;
+    longitude: string;
+    datetime: string;
+  }
+}
+
 export interface Expedition {
   name: string;
   acronym: string;
@@ -25,12 +34,13 @@ export interface Expedition {
   platform?: string;
   start_location: [number, number];
   end_location?: [number, number];
-  image?: string;
+  images?: string[];
+  track?: ExpeditionTrack;
   fundings: string[];
   references: Reference[];
   instruments: Instrument[];
 }
 
 export interface ExpeditionStore {
-  expeditions: Expedition[];
+  expeditions: string[];
 }

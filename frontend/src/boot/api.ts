@@ -14,7 +14,7 @@ if (process.env.CESIUM_ACCESS_TOKEN) {
   Ion.defaultAccessToken = process.env.CESIUM_ACCESS_TOKEN;
 }
 
-const cdnUrl = 'https://enacit4r-cdn.epfl.ch/';
+const cdnUrl = 'https://enacit4r-cdn.epfl.ch/icebreaker-dev/2024-10-14T14:22/';
 
 const baseUrl = `${process.env.API_URL}${process.env.API_PATH}`;
 

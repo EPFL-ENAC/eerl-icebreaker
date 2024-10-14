@@ -17,18 +17,17 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="info">
-        <q-img
-          :src="`images/${expedition.image}`"
-          :alt="expedition.name"
-          spinner-color="grey-6"
-          class="q-mb-md"
+        <q-carousel
+          animated
+          v-model="slide"
+          arrows
+          navigation
+          infinite
         >
-          <template v-slot:error>
-            <div class="absolute-full flex flex-center bg-negative text-white">
-              Cannot load image
-            </div>
+          <template v-for="(imageUrl, index) in imageUrls" :key="imageUrl">
+            <q-carousel-slide :name="index + 1" :img-src="imageUrl" />
           </template>
-        </q-img>
+        </q-carousel>
         <q-list separator>
           <q-item>
             <q-item-section>
@@ -50,6 +49,19 @@
               </q-item-label>
               <q-item-label class="text-help">
                 {{ expedition.platform }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item v-if="expedition.track">
+            <q-item-section>
+              <q-item-label overline>{{ $t('track') }}</q-item-label>
+            </q-item-section>
+            <q-item-section>
+              <q-item-label>
+                <a :href="trackUrl" target="_blank" class="epfl">
+                  {{ expedition.track.file }}
+                  <q-icon name="download" />
+                </a>
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -122,13 +134,23 @@ export default defineComponent({
 </script>
 <script setup lang="ts">
 import { Expedition } from 'src/models';
+import { cdnUrl } from 'src/boot/api';
 
 interface Props {
   expedition: Expedition;
 }
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const tab = ref('info');
+const slide = ref(1);
+
+const imageUrls = computed(() => {
+  return props.expedition.images ? props.expedition.images.map((image) => `${cdnUrl}expeditions/${props.expedition.acronym}/${image}`) : [];
+});
+
+const trackUrl = computed(() => {
+  return props.expedition.track ? `${cdnUrl}expeditions/${props.expedition.acronym}/${props.expedition.track.file}` : '';
+});
 
 function truncateString(str: string, num: number) {
   if (str.length <= num) {

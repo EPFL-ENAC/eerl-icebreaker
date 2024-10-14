@@ -8,32 +8,26 @@
       bottom: auto;
       left: 0;
       z-index: 1000;">
-      <q-list>
-        <q-item>
-          <q-btn
-            flat
-            no-caps
-            color="primary"
-            size="12px"
-            icon="arrow_upward"
-            :label="$t('fly_to_arctic')"
-            @click="flyTo([90, 0])"
-            align="left"
-          />
-        </q-item>
-        <q-item>
-          <q-btn
-            flat
-            no-caps
-            color="primary"
-            size="12px"
-            icon="arrow_downward"
-            :label="$t('fly_to_antarctic')"
-            @click="flyTo([-90, 0])"
-            align="left"
-          />
-        </q-item>
-      </q-list>
+      <q-btn
+        flat
+        no-caps
+        color="primary"
+        size="12px"
+        icon="arrow_upward"
+        :label="$t('fly_to_arctic')"
+        @click="flyTo([90, 0])"
+        align="left"
+      />
+      <q-btn
+        flat
+        no-caps
+        color="primary"
+        size="12px"
+        icon="arrow_downward"
+        :label="$t('fly_to_antarctic')"
+        @click="flyTo([-90, 0])"
+        align="left"
+      />
     </div>
     <div id="globe" />
   </div>
@@ -42,7 +36,9 @@
 <script setup lang="ts">
 import { Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import { Expedition, ExpeditionStore } from 'src/models';
+import { Expedition } from 'src/models';
+import { cdnUrl } from 'src/boot/api';
+import Papa from 'papaparse';
 
 const mapStore = useMapStore();
 
@@ -58,6 +54,15 @@ watch(
     if (!mapStore.selectedExpedition && globe.value) {
       // apply deselection
       globe.value.selectedEntity = undefined;
+    }
+  },
+);
+
+watch(
+  () => mapStore.expeditionsLoaded,
+  () => {
+    if (mapStore.expeditionsLoaded) {
+      mapStore.expeditions.forEach((exp: Expedition) => initExpedition(exp)); 
     }
   },
 );
@@ -82,14 +87,12 @@ function initialize(id: string) {
     vrButton: false,
   });
   flyTo([90, 0], 0);
-  (mapStore.expeditionsDef as ExpeditionStore).expeditions.forEach((exp: Expedition) => initExpedition(exp));
 }
 
 function initExpedition(expedition: Expedition) {
   if (!globe.value) return;
   const start = expedition.start_location;
   const end = expedition.end_location ? expedition.end_location : start;
-  console.log(start, end);
 
   globe.value.entities.add({
     name: expedition.acronym,
@@ -101,19 +104,45 @@ function initExpedition(expedition: Expedition) {
   });
 
   globe.value.selectedEntityChanged.addEventListener(function(selectedEntity) {
-    if (defined(selectedEntity) && defined(selectedEntity.name) && selectedEntity.name === expedition.acronym) {
-      console.log('Selected ' + selectedEntity.name);
-      console.log(selectedEntity);
+    if (defined(selectedEntity) 
+      && defined(selectedEntity.name) 
+      && (selectedEntity.name === expedition.acronym || selectedEntity.name === `${expedition.acronym}-track`)) {
       mapStore.selectedExpedition = expedition;
-    } else {
-      console.log('Deselected.');
     }
   });
 
+  if (expedition.end_location || expedition.track) {
+    if (expedition.track) {
+      const trackUrl = `${cdnUrl}expeditions/${expedition.acronym}/${expedition.track.file}`;
+      const columns = expedition.track.columns;
+      Papa.parse(trackUrl, {
+        download: true,
+        skipEmptyLines: true,
+        dynamicTyping: true,
+        header: true,
+        delimiter: ',',
+        complete: function(results) {
+          const trackLine: number[] = [];
+          results.data.forEach((line: any) => {
+            trackLine.push(line[columns.longitude || 'longitude']);
+            trackLine.push(line[columns.latitude || 'latitude']);
+          });
+          addTrack(expedition, trackLine);
+        },
+      });
+    } else {
+      const trackLine = [start[1], start[0], end[1], end[0]]; // default track
+      addTrack(expedition, trackLine);
+    }
+  }
+}
+
+function addTrack(expedition: Expedition, trackLine: number[]) {
+  if (!globe.value || trackLine.length === 0) return;
   globe.value.entities.add({
     name: `${expedition.acronym}-track`,
     polyline: {
-      positions: Cartesian3.fromDegreesArray([start[1], start[0], end[1], end[0]]),
+      positions: Cartesian3.fromDegreesArray(trackLine),
       width: 3,
       material: new PolylineOutlineMaterialProperty({
         color: Color.ORANGE,

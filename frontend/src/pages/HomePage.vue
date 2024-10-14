@@ -22,6 +22,10 @@ const mapStore = useMapStore();
 
 const showExpedition = ref(false);
 
+onMounted(() => {
+  mapStore.loadExpeditions();
+});
+
 watch(
   () => mapStore.selectedExpedition,
   () => {
