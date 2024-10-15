@@ -1,5 +1,3 @@
-import { Variable } from 'src/models';
-
 export interface FileObject extends Blob {
   readonly size: number;
   readonly name: string;
@@ -7,7 +5,9 @@ export interface FileObject extends Blob {
   readonly type: string;
 }
 
-export interface DataFile {
-  file: FileObject;
-  variables: Variable[];
+export interface CsvLine {
+  [key: string]: string | number;
+}
+export interface CsvParseCallback {
+  (data: CsvLine[]): void;
 }

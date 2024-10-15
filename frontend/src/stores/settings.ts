@@ -5,7 +5,7 @@ const APP_STORAGE_NAME = 'icebreaker_settings';
 
 export type Settings = {
   intro_shown: boolean;
-  theme?: string;
+  show_globe: boolean;
 };
 
 export const useSettingsStore = defineStore('settings', () => {
@@ -15,7 +15,7 @@ export const useSettingsStore = defineStore('settings', () => {
     if (settings.value != undefined) return settings.value;
     let settingsData: Settings = {
       intro_shown: false,
-      theme: 'light',
+      show_globe: false,
     };
     const settingsSaved = LocalStorage.getItem(APP_STORAGE_NAME);
     // cookies.get() declares to return a string but apparently it automatically parses the JSON string to an object

@@ -1,21 +1,19 @@
 <template>
   <q-dialog :maximized="$q.screen.lt.sm" v-model="showDialog" @hide="onHide">
-    <q-card :style="$q.screen.lt.sm ? '' : `width: ${width ? width : '500px'}; max-width: 80vw; max-height: 80vh`">
-      <q-card-actions v-if="$q.screen.lt.sm" align="right">
-        <q-btn flat icon="close" color="primary" v-close-popup />
-      </q-card-actions>
-      <q-card-section>
-        <div v-if="title" class="text-h6 q-mb-sm">
+    <q-card :style="$q.screen.lt.sm ? '' : `width: ${width ? width : '500px'}; max-width: 80vw; max-height: 90vh`">
+      <q-card-actions>
+        <div v-if="title" class="text-h6 q-pl-sm">
           {{ title }}
         </div>
+        <q-space />
+        <q-btn flat icon="close" color="primary" v-close-popup class="float-right" />
+        </q-card-actions>
+      <q-card-section class="q-pt-none">
         <div v-if="props.content">
           <q-markdown :src="props.content" />
         </div>
         <slot></slot>
       </q-card-section>
-      <q-card-actions v-if="$q.screen.gt.xs" align="right">
-        <q-btn flat :label="$t('close')" color="primary" v-close-popup />
-      </q-card-actions>
     </q-card>
   </q-dialog>
 </template>

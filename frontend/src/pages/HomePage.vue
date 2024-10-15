@@ -1,7 +1,28 @@
 <template>
-  <q-page class="bg-black">
-    <globe-view />
+  <q-page :class="mapStore.showGlobe ? 'bg-black' : ''">
+    <div v-if="mapStore.showGlobe">
+      <globe-view />
+    </div>
+    <div v-else>
+      <q-splitter
+      v-model="split"
+      style="height: 94vh"
+    >
 
+      <template v-slot:before>
+        <azimuth-view id="north" projection="EPSG:3995" />
+      </template>
+
+      <template v-slot:separator>
+        <q-avatar color="primary" text-color="white" size="40px" icon="drag_indicator" />
+      </template>
+      <template v-slot:after>
+        <azimuth-view id="south" projection="EPSG:3031" />
+      </template>
+
+    </q-splitter> 
+    </div>
+    
     <simple-dialog 
       v-if="mapStore.selectedCampaign"
       v-model="showCampaign"
@@ -17,9 +38,10 @@
 import SimpleDialog from 'src/components/SimpleDialog.vue';
 import CampaignView from 'src/components/CampaignView.vue';
 import GlobeView from 'src/components/map/GlobeView.vue';
+import AzimuthView from 'src/components/map/AzimuthView.vue';
 
 const mapStore = useMapStore();
-
+const split = ref(50);
 const showCampaign = ref(false);
 
 onMounted(() => {

@@ -33,12 +33,16 @@
   </div>
 </template>
 
+<script lang="ts">
+export default defineComponent({
+  name: 'GlobeView',
+});
+</script>
 <script setup lang="ts">
 import { Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { Campaign } from 'src/models';
-import { cdnUrl } from 'src/boot/api';
-import Papa from 'papaparse';
+import { CsvLine } from '../models';
 
 const mapStore = useMapStore();
 
@@ -46,6 +50,9 @@ const globe = ref<Viewer | null>(null);
 
 onMounted(() => {
   initialize('globe');
+  if (mapStore.campaignsLoaded) {
+    mapStore.campaigns.forEach((exp: Campaign) => initCampaign(exp)); 
+  }
 });
 
 watch(
@@ -98,8 +105,8 @@ function initCampaign(campaign: Campaign) {
     name: campaign.acronym,
     position: Cartesian3.fromDegrees(start[1], start[0]),
     point: {
-      pixelSize: 20,
-      color: Color.GREEN,
+      pixelSize: 10,
+      color: Color.RED,
     },
   });
 
@@ -108,7 +115,7 @@ function initCampaign(campaign: Campaign) {
       name: campaign.acronym,
       position: Cartesian3.fromDegrees(end[1], end[0]),
       point: {
-        pixelSize: 20,
+        pixelSize: 10,
         color: Color.RED,
       },
     });
@@ -124,26 +131,14 @@ function initCampaign(campaign: Campaign) {
 
   if (campaign.end_location || campaign.track) {
     if (campaign.track) {
-      const trackUrl = `${cdnUrl}campaigns/${campaign.acronym}/${campaign.track.file}`;
       const columns = campaign.track.columns;
-      Papa.parse(trackUrl, {
-        download: true,
-        skipEmptyLines: true,
-        dynamicTyping: true,
-        header: true,
-        delimiter: ',',
-        complete: function(results) {
-          if (results.errors.length > 0) {
-            console.error('Error parsing track file', results.errors);
-            return;
-          }
-          const trackLine: number[] = [];
-          results.data.forEach((line: { [key: string]: string | number}) => {
-            trackLine.push(line[columns.longitude || 'longitude'] as number);
-            trackLine.push(line[columns.latitude || 'latitude'] as number);
-          });
-          addTrack(campaign, trackLine);
-        },
+      mapStore.getTrackData(campaign, (lines: CsvLine[]) => {
+        const trackLine: number[] = [];
+        lines.forEach((line: CsvLine) => {
+          trackLine.push(line[columns.longitude || 'longitude'] as number);
+          trackLine.push(line[columns.latitude || 'latitude'] as number);
+        });
+        addTrack(campaign, trackLine);
       });
     } else {
       const trackLine = [start[1], start[0], end[1], end[0]]; // default track

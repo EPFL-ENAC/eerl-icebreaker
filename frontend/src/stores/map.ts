@@ -2,6 +2,8 @@ import { defineStore } from 'pinia';
 import { CampaignStore, Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
 import axios from 'axios';
+import { CsvLine, CsvParseCallback } from 'src/components/models';
+import Papa from 'papaparse';
 
 export const useMapStore = defineStore('map', () => {
 
@@ -10,6 +12,8 @@ export const useMapStore = defineStore('map', () => {
   const campaignsLoaded = ref(false);
   const campaignsStore = ref<CampaignStore | null>(null);
   const campaigns = ref<Campaign[]>([]);
+  const showGlobe = ref(false);
+  const tracks: { [key: string]: CsvLine[] } = ref({});
 
   async function loadCampaigns() {
     campaignsLoaded.value = false;
@@ -26,11 +30,36 @@ export const useMapStore = defineStore('map', () => {
     }
   }
 
+  function getTrackData(campaign: Campaign, callback: CsvParseCallback) {
+    if (!campaign.track) return callback([]);
+    const trackUrl = `${cdnUrl}campaigns/${campaign.acronym}/${campaign.track.file}`;
+    if (tracks.value[trackUrl]) {
+      return callback(tracks.value[trackUrl]);
+    }
+    Papa.parse(trackUrl, {
+      download: true,
+      skipEmptyLines: true,
+      dynamicTyping: true,
+      header: true,
+      delimiter: ',',
+      complete: function(results) {
+        if (results.errors.length > 0) {
+          console.error('Error parsing track file', results.errors);
+          return;
+        }
+        tracks.value[trackUrl] = results.data;
+        callback(results.data);
+      },
+    });
+  }
+
   return {
     tileLayer,
     selectedCampaign,
     campaignsLoaded,
     campaigns,
+    showGlobe,
     loadCampaigns,
+    getTrackData,
   };
 });
