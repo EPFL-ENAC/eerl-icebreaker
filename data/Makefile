@@ -6,5 +6,5 @@ help:
 	@echo s3://${bucket}/${path}/${version}/
 
 cdn:
-	s3cmd put --recursive --acl-public --guess-mime-type expeditions s3://${bucket}/${path}/${version}/
+	s3cmd put --recursive --acl-public --guess-mime-type campaigns s3://${bucket}/${path}/${version}/
 

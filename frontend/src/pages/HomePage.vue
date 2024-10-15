@@ -3,39 +3,39 @@
     <globe-view />
 
     <simple-dialog 
-      v-if="mapStore.selectedExpedition"
-      v-model="showExpedition"
-      :title="mapStore.selectedExpedition.acronym"
+      v-if="mapStore.selectedCampaign"
+      v-model="showCampaign"
+      :title="mapStore.selectedCampaign.acronym"
       width="800px"
-      @update:model-value="onShowExpeditionUpdated">
-      <expedition-view :expedition="mapStore.selectedExpedition" />
+      @update:model-value="onShowCampaignUpdated">
+      <campaign-view :campaign="mapStore.selectedCampaign" />
     </simple-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import SimpleDialog from 'src/components/SimpleDialog.vue';
-import ExpeditionView from 'src/components/ExpeditionView.vue';
+import CampaignView from 'src/components/CampaignView.vue';
 import GlobeView from 'src/components/map/GlobeView.vue';
 
 const mapStore = useMapStore();
 
-const showExpedition = ref(false);
+const showCampaign = ref(false);
 
 onMounted(() => {
-  mapStore.loadExpeditions();
+  mapStore.loadCampaigns();
 });
 
 watch(
-  () => mapStore.selectedExpedition,
+  () => mapStore.selectedCampaign,
   () => {
-    showExpedition.value = mapStore.selectedExpedition !== null;
+    showCampaign.value = mapStore.selectedCampaign !== null;
   },
 );
 
-function onShowExpeditionUpdated() {
-  if (!showExpedition.value) {
-    mapStore.selectedExpedition = null;
+function onShowCampaignUpdated() {
+  if (!showCampaign.value) {
+    mapStore.selectedCampaign = null;
   }
 }
 </script>

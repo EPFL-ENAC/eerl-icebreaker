@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import { Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import { Expedition } from 'src/models';
+import { Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
 import Papa from 'papaparse';
 
@@ -49,9 +49,9 @@ onMounted(() => {
 });
 
 watch(
-  () => mapStore.selectedExpedition,
+  () => mapStore.selectedCampaign,
   () => {
-    if (!mapStore.selectedExpedition && globe.value) {
+    if (!mapStore.selectedCampaign && globe.value) {
       // apply deselection
       globe.value.selectedEntity = undefined;
     }
@@ -59,10 +59,10 @@ watch(
 );
 
 watch(
-  () => mapStore.expeditionsLoaded,
+  () => mapStore.campaignsLoaded,
   () => {
-    if (mapStore.expeditionsLoaded) {
-      mapStore.expeditions.forEach((exp: Expedition) => initExpedition(exp)); 
+    if (mapStore.campaignsLoaded) {
+      mapStore.campaigns.forEach((exp: Campaign) => initCampaign(exp)); 
     }
   },
 );
@@ -89,32 +89,43 @@ function initialize(id: string) {
   flyTo([90, 0], 0);
 }
 
-function initExpedition(expedition: Expedition) {
+function initCampaign(campaign: Campaign) {
   if (!globe.value) return;
-  const start = expedition.start_location;
-  const end = expedition.end_location ? expedition.end_location : start;
+  const start = campaign.start_location;
+  const end = campaign.end_location ? campaign.end_location : start;
 
   globe.value.entities.add({
-    name: expedition.acronym,
+    name: campaign.acronym,
     position: Cartesian3.fromDegrees(start[1], start[0]),
     point: {
       pixelSize: 20,
-      color: Color.YELLOW,
+      color: Color.GREEN,
     },
   });
+
+  if (campaign.end_location) {
+    globe.value.entities.add({
+      name: campaign.acronym,
+      position: Cartesian3.fromDegrees(end[1], end[0]),
+      point: {
+        pixelSize: 20,
+        color: Color.RED,
+      },
+    });
+  }
 
   globe.value.selectedEntityChanged.addEventListener(function(selectedEntity) {
     if (defined(selectedEntity) 
       && defined(selectedEntity.name) 
-      && (selectedEntity.name === expedition.acronym || selectedEntity.name === `${expedition.acronym}-track`)) {
-      mapStore.selectedExpedition = expedition;
+      && (selectedEntity.name === campaign.acronym || selectedEntity.name === `${campaign.acronym}-track`)) {
+      mapStore.selectedCampaign = campaign;
     }
   });
 
-  if (expedition.end_location || expedition.track) {
-    if (expedition.track) {
-      const trackUrl = `${cdnUrl}expeditions/${expedition.acronym}/${expedition.track.file}`;
-      const columns = expedition.track.columns;
+  if (campaign.end_location || campaign.track) {
+    if (campaign.track) {
+      const trackUrl = `${cdnUrl}campaigns/${campaign.acronym}/${campaign.track.file}`;
+      const columns = campaign.track.columns;
       Papa.parse(trackUrl, {
         download: true,
         skipEmptyLines: true,
@@ -122,30 +133,34 @@ function initExpedition(expedition: Expedition) {
         header: true,
         delimiter: ',',
         complete: function(results) {
+          if (results.errors.length > 0) {
+            console.error('Error parsing track file', results.errors);
+            return;
+          }
           const trackLine: number[] = [];
-          results.data.forEach((line: any) => {
-            trackLine.push(line[columns.longitude || 'longitude']);
-            trackLine.push(line[columns.latitude || 'latitude']);
+          results.data.forEach((line: { [key: string]: string | number}) => {
+            trackLine.push(line[columns.longitude || 'longitude'] as number);
+            trackLine.push(line[columns.latitude || 'latitude'] as number);
           });
-          addTrack(expedition, trackLine);
+          addTrack(campaign, trackLine);
         },
       });
     } else {
       const trackLine = [start[1], start[0], end[1], end[0]]; // default track
-      addTrack(expedition, trackLine);
+      addTrack(campaign, trackLine);
     }
   }
 }
 
-function addTrack(expedition: Expedition, trackLine: number[]) {
+function addTrack(campaign: Campaign, trackLine: number[]) {
   if (!globe.value || trackLine.length === 0) return;
   globe.value.entities.add({
-    name: `${expedition.acronym}-track`,
+    name: `${campaign.acronym}-track`,
     polyline: {
       positions: Cartesian3.fromDegreesArray(trackLine),
       width: 3,
       material: new PolylineOutlineMaterialProperty({
-        color: Color.ORANGE,
+        color: campaign.track?.color ? Color.fromCssColorString(campaign.track?.color) : Color.ORANGE,
         outlineWidth: 1,
         outlineColor: Color.BLACK,
       }),

@@ -1,36 +1,36 @@
 import { defineStore } from 'pinia';
-import { ExpeditionStore, Expedition } from 'src/models';
+import { CampaignStore, Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
 import axios from 'axios';
 
 export const useMapStore = defineStore('map', () => {
 
   const tileLayer = ref<string>('osm');
-  const selectedExpedition = ref<Expedition | null>(null);
-  const expeditionsLoaded = ref(false);
-  const expeditionsStore = ref<ExpeditionStore | null>(null);
-  const expeditions = ref<Expedition[]>([]);
+  const selectedCampaign = ref<Campaign | null>(null);
+  const campaignsLoaded = ref(false);
+  const campaignsStore = ref<CampaignStore | null>(null);
+  const campaigns = ref<Campaign[]>([]);
 
-  async function loadExpeditions() {
-    expeditionsLoaded.value = false;
-    expeditions.value = [];
+  async function loadCampaigns() {
+    campaignsLoaded.value = false;
+    campaigns.value = [];
     // get index.json from cdnUrl
-    const resp = await axios.get(`${cdnUrl}expeditions/index.json`);
-    expeditionsStore.value = resp.data;
+    const resp = await axios.get(`${cdnUrl}campaigns/index.json`);
+    campaignsStore.value = resp.data;
 
-    // get the expeditions
-    if (expeditionsStore.value) {
-      await Promise.all(expeditionsStore.value.expeditions
-        .map((name: string) => axios.get(`${cdnUrl}expeditions/${name}/index.json`).then((resp) => expeditions.value.push(resp.data))));
-      expeditionsLoaded.value = true;
+    // get the campaigns
+    if (campaignsStore.value) {
+      await Promise.all(campaignsStore.value.campaigns
+        .map((name: string) => axios.get(`${cdnUrl}campaigns/${name}/index.json`).then((resp) => campaigns.value.push(resp.data))));
+      campaignsLoaded.value = true;
     }
   }
 
   return {
     tileLayer,
-    selectedExpedition,
-    expeditionsLoaded,
-    expeditions,
-    loadExpeditions,
+    selectedCampaign,
+    campaignsLoaded,
+    campaigns,
+    loadCampaigns,
   };
 });

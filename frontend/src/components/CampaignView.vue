@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="text-help q-mb-md">{{ expedition.name }}</div>
-    <q-markdown :src="expedition.objectives" />
+    <div class="text-help q-mb-md">{{ campaign.name }}</div>
+    <q-markdown :src="campaign.objectives" />
     <q-tabs v-model="tab"
       dense
       class="text-grey q-mt-md"
@@ -17,17 +17,33 @@
     <q-separator />
     <q-tab-panels v-model="tab" animated>
       <q-tab-panel name="info">
-        <q-carousel
-          animated
-          v-model="slide"
-          arrows
-          navigation
-          infinite
-        >
-          <template v-for="(imageUrl, index) in imageUrls" :key="imageUrl">
-            <q-carousel-slide :name="index + 1" :img-src="imageUrl" />
-          </template>
-        </q-carousel>
+        <div v-if="imageUrls.length > 1">
+          <q-carousel
+            animated
+            v-model="slide"
+            arrows
+            navigation
+            infinite
+          >
+            <template v-for="(imageUrl, index) in imageUrls" :key="imageUrl">
+              <q-carousel-slide :name="index + 1" :img-src="imageUrl" />
+            </template>
+          </q-carousel>
+        </div>
+        <div v-else-if="imageUrls.length === 1">
+          <q-img
+            :src="imageUrls[0]"
+            :alt="campaign.name"
+            spinner-color="grey-6"
+            class="q-mb-md"
+          >
+            <template v-slot:error>
+              <div class="absolute-full flex flex-center bg-negative text-white">
+                Cannot load image
+              </div>
+            </template>
+          </q-img>
+        </div>
         <q-list separator>
           <q-item>
             <q-item-section>
@@ -35,7 +51,7 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                {{ expedition.start_date }} / {{ expedition.end_date }}
+                {{ campaign.start_date }} / {{ campaign.end_date }}
               </q-item-label>
             </q-item-section>
           </q-item>
@@ -45,21 +61,21 @@
             </q-item-section>
             <q-item-section>
               <q-item-label>
-                {{ expedition.location }}
+                {{ campaign.location }}
               </q-item-label>
               <q-item-label class="text-help">
-                {{ expedition.platform }}
+                {{ campaign.platform }}
               </q-item-label>
             </q-item-section>
           </q-item>
-          <q-item v-if="expedition.track">
+          <q-item v-if="campaign.track">
             <q-item-section>
               <q-item-label overline>{{ $t('track') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
                 <a :href="trackUrl" target="_blank" class="epfl">
-                  {{ expedition.track.file }}
+                  {{ campaign.track.file.split('/').pop() }}
                   <q-icon name="download" />
                 </a>
               </q-item-label>
@@ -69,7 +85,7 @@
       </q-tab-panel>
       <q-tab-panel name="references">
         <q-list separator>
-          <q-item v-for="reference in expedition.references" :key="reference.doi">
+          <q-item v-for="reference in campaign.references" :key="reference.doi">
             <q-item-section>
               <q-item-label overline>{{ reference.citation }}</q-item-label>
             </q-item-section>
@@ -84,7 +100,7 @@
       </q-tab-panel>
       <q-tab-panel name="instruments">
         <q-list separator>
-          <q-item v-for="instrument in expedition.instruments" :key="instrument.name">
+          <q-item v-for="instrument in campaign.instruments" :key="instrument.name">
             <q-item-section>
               <q-item-label overline>{{ instrument.name }}</q-item-label>
               <q-item-label class="text-help">{{ instrument.description }}</q-item-label>
@@ -115,7 +131,7 @@
       </q-tab-panel>
       <q-tab-panel name="fundings">
         <q-list separator>
-          <q-item v-for="funding in expedition.fundings" :key="funding">
+          <q-item v-for="funding in campaign.fundings" :key="funding">
             <q-item-section>
               <q-item-label overline>{{ funding }}</q-item-label>
             </q-item-section>
@@ -129,15 +145,15 @@
 
 <script lang="ts">
 export default defineComponent({
-  name: 'ExpeditionView',
+  name: 'CampaignView',
 });
 </script>
 <script setup lang="ts">
-import { Expedition } from 'src/models';
+import { Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
 
 interface Props {
-  expedition: Expedition;
+  campaign: Campaign;
 }
 const props = defineProps<Props>();
 
@@ -145,11 +161,11 @@ const tab = ref('info');
 const slide = ref(1);
 
 const imageUrls = computed(() => {
-  return props.expedition.images ? props.expedition.images.map((image) => `${cdnUrl}expeditions/${props.expedition.acronym}/${image}`) : [];
+  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}campaigns/${props.campaign.acronym}/${image}`) : [];
 });
 
 const trackUrl = computed(() => {
-  return props.expedition.track ? `${cdnUrl}expeditions/${props.expedition.acronym}/${props.expedition.track.file}` : '';
+  return props.campaign.track ? `${cdnUrl}campaigns/${props.campaign.acronym}/${props.campaign.track.file}` : '';
 });
 
 function truncateString(str: string, num: number) {
