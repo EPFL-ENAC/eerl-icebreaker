@@ -18,6 +18,7 @@
     "@zip.js/zip.js": "^2.7.52",
     "axios": "^1.7.2",
     "cesium": "^1.122.0",
+    "keycloak-js": "^26.0.0",
     "lorem-ipsum": "^2.0.8",
     "ol": "^10.2.1",
     "papaparse": "^5.4.1",

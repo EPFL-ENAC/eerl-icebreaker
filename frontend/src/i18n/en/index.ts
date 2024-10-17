@@ -1,4 +1,15 @@
 export default {
+  user: {
+    welcome: 'Welcome, {name}.',
+    welcome_admin: 'Welcome, {name}. You are an administrator user.',
+    not_admin: 'You do not have the role of administrator. Please contact the system administrator if you think it is an error.',
+    login: 'Login',
+    logout: 'Logout',
+  },
+  administration: 'Administration',
+  profile: 'Profile',
+  campaigns: 'Campaigns',
+  campaigns_info: 'Campaigns information',
   app_title: 'IceBreaker',
   app_subtitle: 'Polar campaigns tracks',
   error_not_found: 'Oops. Nothing here...',
