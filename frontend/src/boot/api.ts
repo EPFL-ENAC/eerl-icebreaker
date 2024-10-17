@@ -14,7 +14,7 @@ declare module '@vue/runtime-core' {
   }
 }
 
-const cdnUrl = 'https://enacit4r-cdn.epfl.ch/icebreaker-dev/2024-10-15T08:20/';
+const cdnUrl = `https://enacit4r-cdn.epfl.ch/${process.env.CDN_PATH}`;
 
 const baseUrl = `${process.env.API_URL}${process.env.API_PATH}`;
 

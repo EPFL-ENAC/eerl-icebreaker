@@ -27,8 +27,10 @@ export interface Track {
 }
 
 export interface Campaign {
+  id: string;
   name: string;
   acronym: string;
+  website?: string;
   type?: string;
   color?: string;
   objectives?: string;

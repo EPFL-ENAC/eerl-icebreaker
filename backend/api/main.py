@@ -5,6 +5,7 @@ from api.config import config
 from logging import basicConfig, INFO
 from pydantic import BaseModel
 from api.views.files import router as files_router
+from api.views.campaigns import router as campaigns_router
 
 basicConfig(level=INFO)
 
@@ -42,4 +43,10 @@ app.include_router(
     files_router,
     prefix="/files",
     tags=["Files"],
+)
+
+app.include_router(
+    campaigns_router,
+    prefix="/catalog",
+    tags=["Catalog"],
 )

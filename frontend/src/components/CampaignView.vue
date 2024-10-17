@@ -161,11 +161,11 @@ const tab = ref('info');
 const slide = ref(1);
 
 const imageUrls = computed(() => {
-  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}campaigns/${props.campaign.acronym}/${image}`) : [];
+  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}/campaigns/${props.campaign.id}/${image}`) : [];
 });
 
 const trackUrl = computed(() => {
-  return props.campaign.track ? `${cdnUrl}campaigns/${props.campaign.acronym}/${props.campaign.track.file}` : '';
+  return props.campaign.track ? `${cdnUrl}/campaigns/${props.campaign.id}/${props.campaign.track.file}` : '';
 });
 
 function truncateString(str: string, num: number) {

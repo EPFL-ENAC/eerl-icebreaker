@@ -15,6 +15,71 @@
         <div class="text-help q-mb-md">
           {{ $t('campaigns_info') }}
         </div>
+        <div class="row q-gutter-md">
+          <div class="col" style="max-width: 200px;">
+            <div class="q-mb-md q-mt-sm">
+              <div v-for="(campaign, i) in campaigns"
+              :key="campaign.id">
+                <q-btn
+                  flat
+                  no-caps
+                  :label="campaign.acronym"
+                  align="left"
+                  size="12px"
+                  class="full-width"
+                  :class="`${selected === i ? 'bg-light-blue-1' : ''}`"
+                  @click="selected = i"
+                />
+              </div>
+            </div>
+            <q-btn @click="onAdd" color="secondary" :label="$t('add')" icon="add" size="sm" class="full-width"/>
+          </div>
+          <div class="col" v-if="selected !== null && campaigns">
+            <div class="text-bold">
+              <q-toolbar>
+                <q-icon name="directions_boat" class="q-mr-xs" size="sm"/>
+                {{ campaigns[selected].acronym }}
+                <q-space />
+                <q-btn
+                  v-if="selected !== null"
+                  rounded
+                  dense
+                  flat
+                  color="negative"
+                  :title="$t('delete')"
+                  icon="delete"
+                  @click="onDelete(selected)"
+                />
+                <q-btn
+                  v-if="selected !== null"
+                  rounded
+                  dense
+                  flat
+                  size="sm"
+                  :title="$t('previous')"
+                  icon="arrow_back_ios"
+                  class="on-right"
+                  :disable="selected === 0"
+                  @click="selected = selected !== null ? selected - 1 : null"
+                />
+                <q-btn
+                  v-if="selected !== null"
+                  rounded
+                  dense
+                  flat
+                  size="sm"
+                  :title="$t('next')"
+                  icon="arrow_forward_ios"
+                  class="q-ml-xs"
+                  :disable="selected === campaigns.length - 1"
+                  @click="selected = selected !== null ? selected + 1 : null"
+                />
+              </q-toolbar>
+            </div>
+            <q-separator class="q-mb-md"/>
+            <campaign-form v-model="campaigns[selected]" />
+          </div>
+        </div>
       </div>
       <div v-else>
         <q-card class="bg-negative text-white">
@@ -28,13 +93,26 @@
 </template>
 
 <script setup lang="ts">
+import CampaignForm from 'src/components/admin/CampaignForm.vue';
+
 const authStore = useAuthStore();
+const mapStore = useMapStore();
+
+const selected = ref<number | null>(null);
+const campaigns = computed(() => mapStore.campaigns || []);
 
 onMounted(() => {
    authStore.init().then(() => {
      if (!authStore.isAuthenticated) {
        return authStore.login();
      }
+   }).then(() => {
+      mapStore.loadCampaigns().then(() => {
+        if (campaigns.value.length > 0) {
+          selected.value = 0;
+        }
+      });
    });
+   
 })
 </script>

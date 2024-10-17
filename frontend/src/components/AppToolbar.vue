@@ -138,6 +138,8 @@ withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(['toggle']);
 
+const route = useRoute();
+const router = useRouter();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
 const authStore = useAuthStore();
@@ -160,5 +162,8 @@ function toggleLeftDrawer() {
 function toggleShowGlobe() {
   mapStore.showGlobe = !mapStore.showGlobe;
   settingsStore.saveSettings({ show_globe: mapStore.showGlobe } as Settings);
+  if (route.path === '/admin') {
+    router.push('/');
+  }
 }
 </script>

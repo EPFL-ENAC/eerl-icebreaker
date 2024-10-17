@@ -11,7 +11,6 @@ from fastapi import Depends, Security, Query, APIRouter, HTTPException
 from fastapi.responses import Response
 
 from api.utils.file_size import size_checker
-from api.auth import get_api_key
 
 from pydantic import BaseModel
 
