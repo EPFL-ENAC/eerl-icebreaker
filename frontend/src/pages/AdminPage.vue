@@ -181,7 +181,11 @@ function onLoad() {
   mapStore.loadCampaigns().then(() => {
     adminStore.initCampaigns(mapStore.campaigns);
     if (campaigns.value.length > 0) {
-      selected.value = 0;
+      if (selected.value === null) {
+        selected.value = 0;
+      } else if (selected.value >= campaigns.value.length) {
+        selected.value = campaigns.value.length - 1;
+      }
     }
   }).finally(() => {
     loading.value = false;

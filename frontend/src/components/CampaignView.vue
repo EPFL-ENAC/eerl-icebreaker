@@ -109,8 +109,10 @@
               <div>
                 <dl>
                   <template v-for="measure in instrument.measures" :key="measure.name">
-                    <dd
-                    class="q-ma-none text-caption text-bold">{{ measure.name }}</dd>
+                    <dd class="q-ma-none">
+                      <div class="text-caption text-bold">{{ measure.name }}</div>
+                      <div v-if="measure.description" class="text-hint">{{ measure.description }}</div>
+                    </dd>
                     <dt
                       v-for="link in measure.datasets"
                       :key="link"

@@ -32,7 +32,7 @@ export default {
   references: 'References',
   upload_file_hint: 'Drag and drop a file here or click to upload a file.',
   add_image_file: 'Add image file',
-  add_track_file: 'Track file (csv or tsv)',
+  add_track_file: 'Track coordinates file (csv or tsv)',
   columns: 'Columns',
   track_columns_info: 'The track file must contain at least columns about latitude and longitude. A timestamp column is optional.',
   latitude_col_name: 'Latitude column name',
@@ -59,4 +59,6 @@ export default {
   doi: 'DOI',
   description: 'Description',
   reload_confirmation: 'You have pending changes. Are you sure you want to reload the page? All unsaved changes will be lost.',
+  measures: 'Measures',
+  published_datasets: 'Published datasets',
 };

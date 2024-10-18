@@ -47,13 +47,13 @@ class CampaignsService:
         if campaign.images is not None:
             for i, file in enumerate(campaign.images):
                 if "/tmp/" in file.path:
-                    new_name = f"{i}-{file.name}"
+                    new_name = f"{i + 1}-{file.name}"
                     file_path = f"{s3_folder}/{new_name}"
                     new_key = await s3_client.move_file(file.path, file_path)
                     file.name = new_name
                     file.path = urllib.parse.quote(new_key)
                     if file.alt_path is not None:
-                        new_name = f"{i}-{file.alt_name}"
+                        new_name = f"{i + 1}-{file.alt_name}"
                         new_key = await s3_client.move_file(file.alt_path, f"{s3_folder}/{new_name}")
                         file.alt_name = new_name
                         file.alt_path = urllib.parse.quote(new_key)

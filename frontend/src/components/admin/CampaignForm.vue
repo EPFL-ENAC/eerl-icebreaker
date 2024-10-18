@@ -173,6 +173,7 @@
           :label="$t('add_image_file')"
           :hint="$t('upload_file_hint')"
           accept=".jpg, .jpeg, .png, .webp"
+          :disable="uploading"
           @update:model-value="onImageFileSelected"
         />
       </div>
@@ -257,6 +258,7 @@
           :label="$t('add_track_file')"
           :hint="$t('upload_file_hint')"
           accept=".csv, .tsv"
+          :disable="uploading"
           @update:model-value="onTrackFileSelected"
         />
       </div>
@@ -423,8 +425,10 @@
           <div>
             <dl>
               <template v-for="measure in instrument.measures" :key="measure.name">
-                <dd
-                class="q-ma-none text-caption text-bold">{{ measure.name }}</dd>
+                <dd class="q-ma-none">
+                  <div class="text-caption text-bold">{{ measure.name }}</div>
+                  <div v-if="measure.description" class="text-hint">{{ measure.description }}</div>
+                </dd>
                 <dt
                   v-for="link in measure.datasets"
                   :key="link"
@@ -576,7 +580,7 @@
     </q-dialog>
 
     <q-dialog v-model="showInstrument">
-      <q-card style="width: 500px; max-width: 90hw;">
+      <q-card style="width: 800px; max-width: 90hw;">
         <q-card-section>
           <q-input
             v-model="editedInstrument.name"
@@ -588,8 +592,80 @@
             v-model="editedInstrument.description"
             :label="$t('description')"
             filled
+            autogrow
             type="textarea"
             class="q-mb-md"
+          />
+          <div class="text-bold q-mb-md">{{ $t('measures') }}</div>
+          <q-list bordered separator v-if="editedInstrument.measures && editedInstrument.measures.length" class="q-mb-md">
+            <q-item v-for="(measure, i) in editedInstrument.measures" :key="i">
+              <q-item-section>
+                <q-input
+                  v-model="measure.name"
+                  :label="$t('name')"
+                  filled
+                  class="q-mb-md"
+                />
+                <q-input
+                  v-model="measure.description"
+                  :label="$t('description')"
+                  filled
+                  autogrow
+                  type="textarea"
+                  class="q-mb-md"
+                />
+                <div class="text-bold q-mb-md">{{ $t('published_datasets') }}</div>
+                <div v-for="(dataset, j) in measure.datasets" :key="j" class="q-mb-sm">
+                  <table class="full-width">
+                    <tr>
+                      <td>
+                        <q-input
+                          v-model="measure.datasets[j]"
+                          filled
+                        />
+                      </td>
+                      <td>
+                        <q-btn
+                          color="secondary"
+                          icon="delete"
+                          dense
+                          flat
+                          size="sm"
+                          class="q-ml-sm"
+                          @click="measure.datasets.splice(j, 1)" />
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+                <div>
+                  <q-btn
+                    color="secondary"
+                    icon="add"
+                    dense
+                    size="sm"
+                    @click="measure.datasets.push('')"
+                    class="q-mb-sm"
+                  />
+                </div>
+              </q-item-section>
+              <q-item-section avatar>
+                <q-btn
+                  icon="delete"
+                  rounded
+                  dense
+                  flat
+                  color="negative"
+                  size="sm"
+                  @click="editedInstrument.measures.splice(i, 1)"
+                />
+              </q-item-section>
+            </q-item>
+          </q-list>
+          <q-btn
+            color="primary"
+            icon="add"
+            size="sm"
+            @click="editedInstrument.measures.push({ name: '', description: '', datasets: [] })"
           />
         </q-card-section>
         <q-card-actions align="right">
@@ -637,6 +713,7 @@ const end_location_lat = ref(props.modelValue.end_location ? props.modelValue.en
 const end_location_lon = ref(props.modelValue.end_location ? props.modelValue.end_location[1] : undefined);
 const localFile = ref<FileObject>();
 const showFundingDialog = ref(false);
+const uploading = ref(false);
 const selectedFunding = ref<Funding | undefined>();
 const editedFunding = ref<Funding | undefined>();
 const showReferenceDialog = ref(false);
@@ -686,12 +763,15 @@ function onImageFileSelected() {
   if (!localFile.value) {
     return;
   }
+  uploading.value = true;
   adminStore.uploadTmpFile(localFile.value).then((image) => {
     if (!campaign.value.images) {
       campaign.value.images = [];
     }
     campaign.value.images.push(image);
     localFile.value = undefined;
+  }).finally(() => {
+    uploading.value = false;
   });
 }
 
@@ -705,6 +785,7 @@ function onTrackFileSelected() {
   if (!localFile.value) {
     return;
   }
+  uploading.value = true;
   adminStore.uploadTmpFile(localFile.value).then((file) => {
     if (!campaign.value.track) {
       campaign.value.track = {
@@ -722,6 +803,8 @@ function onTrackFileSelected() {
       campaign.value.track.file = file;
     }
     localFile.value = undefined;
+  }).finally(() => {
+    uploading.value = false;
   });
 }
 
@@ -830,7 +913,8 @@ function onReferenceDown(reference: Reference) {
 function onShowInstrument(instrument: Instrument | undefined) {
   showInstrument.value = true;
   selectedInstrument.value = instrument;
-  editedInstrument.value = { ...instrument} || {
+  // deep copy
+  editedInstrument.value = instrument ? JSON.parse(JSON.stringify(instrument)) : {
     name: '',
     description: '',
     measures: [],
