@@ -7,7 +7,7 @@
         </div>
         <q-space />
         <q-btn flat icon="close" color="primary" v-close-popup class="float-right" />
-        </q-card-actions>
+      </q-card-actions>
       <q-card-section class="q-pt-none">
         <div v-if="props.content">
           <q-markdown :src="props.content" />

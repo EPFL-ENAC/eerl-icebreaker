@@ -105,6 +105,7 @@
     "useId": true,
     "useModel": true,
     "useTemplateRef": true,
-    "useAuthStore": true
+    "useAuthStore": true,
+    "useAdminStore": true
   }
 }

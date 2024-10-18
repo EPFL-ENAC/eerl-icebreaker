@@ -24,7 +24,7 @@ export const useMapStore = defineStore('map', () => {
 
   function getTrackData(campaign: Campaign, callback: CsvParseCallback) {
     if (!campaign.track) return callback([]);
-    const trackUrl = `${cdnUrl}/campaigns/${campaign.id}/${campaign.track.file}`;
+    const trackUrl = `${cdnUrl}/${campaign.track.file.path}`;
     if (tracks.value && tracks.value[trackUrl]) {
       return callback(tracks.value[trackUrl]);
     }
@@ -46,6 +46,36 @@ export const useMapStore = defineStore('map', () => {
     });
   }
 
+  function addCampaign() {
+    let id = 1;
+    for (const campaign of campaigns.value) {
+      if (campaign.id && parseInt(campaign.id) >= id) {
+        id = parseInt(campaign.id) + 1;
+      }
+    }
+    campaigns.value.push({
+      id: id + '',
+      acronym: `campaign-${id}`,
+      name: `Campaign ${id}`,
+      website: '',
+      objectives: '',
+      platform: '',
+      start_date: '',
+      end_date: '',
+      start_location: [0, 0],
+      end_location: undefined,
+      track: undefined,
+      images: [],
+      fundings: [],
+      references: [],
+      instruments: [],
+    } as Campaign);
+  }
+
+  function deleteCampaign(index: number) {
+    campaigns.value.splice(index, 1);
+  }
+
   return {
     tileLayer,
     selectedCampaign,
@@ -54,5 +84,7 @@ export const useMapStore = defineStore('map', () => {
     showGlobe,
     loadCampaigns,
     getTrackData,
+    addCampaign,
+    deleteCampaign,
   };
 });

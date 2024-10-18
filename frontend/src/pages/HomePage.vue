@@ -5,22 +5,21 @@
     </div>
     <div v-else>
       <q-splitter
-      v-model="split"
-      style="height: 94vh"
-    >
+        v-model="split"
+        :horizontal="$q.screen.lt.md"
+        style="height: 94vh"
+      >
+        <template v-slot:before>
+          <azimuth-view id="north" projection="EPSG:3995" />
+        </template>
 
-      <template v-slot:before>
-        <azimuth-view id="north" projection="EPSG:3995" />
-      </template>
-
-      <template v-slot:separator>
-        <q-avatar color="primary" text-color="white" size="40px" icon="drag_indicator" />
-      </template>
-      <template v-slot:after>
-        <azimuth-view id="south" projection="EPSG:3031" />
-      </template>
-
-    </q-splitter> 
+        <template v-slot:separator>
+          <q-avatar color="primary" text-color="white" size="40px" icon="drag_indicator" />
+        </template>
+        <template v-slot:after>
+          <azimuth-view id="south" projection="EPSG:3031" />
+        </template>
+      </q-splitter> 
     </div>
     
     <simple-dialog 

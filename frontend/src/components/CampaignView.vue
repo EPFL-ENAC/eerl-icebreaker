@@ -75,7 +75,7 @@
             <q-item-section>
               <q-item-label>
                 <a :href="trackUrl" target="_blank" class="epfl">
-                  {{ campaign.track.file.split('/').pop() }}
+                  {{ campaign.track.file.name }}
                   <q-icon name="download" />
                 </a>
               </q-item-label>
@@ -131,9 +131,16 @@
       </q-tab-panel>
       <q-tab-panel name="fundings">
         <q-list separator>
-          <q-item v-for="funding in campaign.fundings" :key="funding">
+          <q-item v-for="funding in campaign.fundings" :key="funding.name">
             <q-item-section>
-              <q-item-label overline>{{ funding }}</q-item-label>
+              <q-item-label overline>{{ funding.name }}</q-item-label>
+              <q-item-label v-if="funding.grant" class="text-help">{{ funding.grant }}</q-item-label>
+            </q-item-section>
+            <q-item-section v-if="funding.website">
+              <a :href="funding.website" target="_blank" class="epfl">
+                {{ truncateString(funding.website, 40) }}
+                <q-icon name="open_in_new" />
+              </a>
             </q-item-section>
           </q-item>
         </q-list>
@@ -161,11 +168,11 @@ const tab = ref('info');
 const slide = ref(1);
 
 const imageUrls = computed(() => {
-  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}/campaigns/${props.campaign.id}/${image}`) : [];
+  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}/${image.path}`) : [];
 });
 
 const trackUrl = computed(() => {
-  return props.campaign.track ? `${cdnUrl}/campaigns/${props.campaign.id}/${props.campaign.track.file}` : '';
+  return props.campaign.track ? `${cdnUrl}/${props.campaign.track.file.path}` : '';
 });
 
 function truncateString(str: string, num: number) {

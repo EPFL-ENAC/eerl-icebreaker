@@ -10,10 +10,6 @@ const routes: RouteRecordRaw[] = [
         path: '/admin',
         component: () => import('pages/AdminPage.vue'),
       },
-      {
-        path: '/profile',
-        component: () => import('pages/ProfilePage.vue'),
-      },
     ],
   },
 

@@ -1,5 +1,6 @@
 from typing import List, Optional, Tuple
 from pydantic import BaseModel
+from api.models.files import FileRef
 
 class Reference(BaseModel):
   citation: str
@@ -23,11 +24,16 @@ class TrackColumns(BaseModel):
   timestamp: Optional[str] = None
 
 class Track(BaseModel):
-  file: str
+  file: FileRef
   columns: TrackColumns
   color: Optional[str] = None
   timestamp_format: Optional[str]
 
+
+class Funding(BaseModel):
+  name: str
+  grant: Optional[str] = None
+  website: Optional[str] = None
 
 class Campaign(BaseModel):
   id: Optional[int] = None
@@ -43,9 +49,9 @@ class Campaign(BaseModel):
   platform: Optional[str] = None
   start_location: Tuple[float, float]
   end_location: Optional[Tuple[float, float]] = None
-  images: Optional[List[str]] = None
+  images: Optional[List[FileRef]] = None
   track: Optional[Track] = None
-  fundings: Optional[List[str]] = None
+  fundings: Optional[List[Funding]] = None
   references: Optional[List[Reference]] = None
   instruments: Optional[List[Instrument]] = None
 
