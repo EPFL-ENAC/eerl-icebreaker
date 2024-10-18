@@ -188,6 +188,7 @@ class S3Client(object):
             response = await client.copy_object(
                 Bucket=config.S3_BUCKET,
                 CopySource={'Bucket': config.S3_BUCKET, 'Key': source_key},
+                ACL="public-read",
                 Key=destination_key)
             if response["ResponseMetadata"]["HTTPStatusCode"] == 200:
                 logger.info(

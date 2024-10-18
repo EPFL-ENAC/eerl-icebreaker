@@ -43,6 +43,7 @@
         icon="settings"
         :title="$t('administration')"
         :to="'/admin'"
+        class="on-left"
       ></q-btn>
     </span>
     <q-btn v-if="$q.screen.lt.md" flat round icon="more_vert">

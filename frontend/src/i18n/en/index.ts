@@ -9,7 +9,7 @@ export default {
   administration: 'Administration',
   profile: 'Profile',
   campaigns: 'Campaigns',
-  campaigns_info: 'Campaigns information',
+  campaigns_info: 'Campaigns and expeditions information management.',
   app_title: 'IceBreaker',
   app_subtitle: 'Polar campaigns tracks',
   error_not_found: 'Oops. Nothing here...',
@@ -58,4 +58,5 @@ export default {
   citation: 'Citation',
   doi: 'DOI',
   description: 'Description',
+  reload_confirmation: 'You have pending changes. Are you sure you want to reload the page? All unsaved changes will be lost.',
 };

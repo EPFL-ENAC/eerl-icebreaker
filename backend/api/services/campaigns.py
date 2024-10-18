@@ -24,62 +24,69 @@ class CampaignsService:
 
         return campaigns
   
-    # async def createOrUpdate(self, study: Study) -> Study:
-    #     if study.identifier is None or study.identifier == "" or study.identifier == "_draft":
-    #         study.identifier = str(uuid.uuid4())
+    async def delete(self, identifier: str):
+        exists = await self.exists(identifier)
+        if not exists:
+            raise Exception(
+                f"Campaign with identifier {identifier} does not exist.")
 
-    #     # Destination folder in s3
-    #     s3_folder = f"draft/{study.identifier}"
+        await s3_client.delete_files(f"campaigns/{identifier}")
 
-    #     # Move tmp files to their final location
-    #     if study.datasets is not None:
-    #         for dataset in study.datasets:
-    #             if "children" in dataset.folder:
-    #                 for i, file in enumerate(dataset.folder["children"]):
-    #                     if "/tmp/" in file["path"]:
-    #                         dataset_file_path = f"{s3_folder}/files/{dataset.name}/{file['name']}"
-    #                         new_key = await s3_client.move_file(file["path"], dataset_file_path)
-    #                         file["path"] = urllib.parse.quote(new_key)
-    #                         dataset.folder["children"][i] = file
-    #             dataset.folder["name"] = dataset.name
-    #             dataset.folder["path"] = s3_client.to_s3_path(
-    #                 urllib.parse.quote(f"{s3_folder}/files/{dataset.name}"))
+    async def exists(self, identifier: str) -> bool:
+        return await s3_client.path_exists(f"campaigns/{identifier}/campaign.json")
+    
+    async def createOrUpdate(self, campaign: Campaign) -> Campaign:
+        if campaign.id is None or campaign.id == "" or campaign.id == "_draft":
+            campaign.id = str(uuid.uuid4())
 
-    #     # TODO Remove files that are not linked to a dataset
+        # Destination folder in s3
+        s3_folder = f"campaigns/{campaign.id}"
 
-    #     # Create a temporary directory to dump JSON
-    #     with tempfile.TemporaryDirectory() as temp_dir:
-    #         print(f"Temporary directory created at: {temp_dir}")
+        # Move tmp files to their final location
+        # Images
+        if campaign.images is not None:
+            for i, file in enumerate(campaign.images):
+                if "/tmp/" in file.path:
+                    new_name = f"{i}-{file.name}"
+                    file_path = f"{s3_folder}/{new_name}"
+                    new_key = await s3_client.move_file(file.path, file_path)
+                    file.name = new_name
+                    file.path = urllib.parse.quote(new_key)
+                    if file.alt_path is not None:
+                        new_name = f"{i}-{file.alt_name}"
+                        new_key = await s3_client.move_file(file.alt_path, f"{s3_folder}/{new_name}")
+                        file.alt_name = new_name
+                        file.alt_path = urllib.parse.quote(new_key)
+        # Track
+        if campaign.track is not None and campaign.track.file is not None:
+            if "/tmp/" in campaign.track.file.path:
+                file_path = f"{s3_folder}/{campaign.track.file.name}"
+                new_key = await s3_client.move_file(campaign.track.file.path, file_path)
+                campaign.track.file.path = new_key
 
-    #         # Use the temporary directory for file operations
-    #         temp_file_path = os.path.join(temp_dir, "study.json")
+        # Create a temporary directory to dump JSON
+        with tempfile.TemporaryDirectory() as temp_dir:
+            print(f"Temporary directory created at: {temp_dir}")
 
-    #         # Convert SQLModel object to dictionary
-    #         study_dict = study.model_dump()
-    #         with open(temp_file_path, "w") as temp_file:
-    #             json.dump(study_dict, temp_file, indent=2)
-    #         await s3_client.upload_local_file(temp_dir, "study.json", s3_folder=s3_folder)
+            # Use the temporary directory for file operations
+            temp_file_path = os.path.join(temp_dir, "campaign.json")
 
-    #     return study
+            # Convert SQLModel object to dictionary
+            campaign_dict = campaign.model_dump()
+            with open(temp_file_path, "w") as temp_file:
+                json.dump(campaign_dict, temp_file, indent=2)
+            await s3_client.upload_local_file(temp_dir, "campaign.json", s3_folder=s3_folder)
 
-    # async def delete(self, identifier: str):
-    #     exists = await self.exists(identifier)
-    #     if not exists:
-    #         raise Exception(
-    #             f"Study with identifier {identifier} does not exist.")
+        return campaign
 
-    #     await s3_client.delete_files(f"draft/{identifier}")
 
-    # async def exists(self, identifier: str) -> bool:
-    #     return await s3_client.path_exists(f"draft/{identifier}/study.json")
+    async def get(self, identifier: str) -> Campaign:
+        exists = await self.exists(identifier)
+        if not exists:
+            raise Exception(
+                f"Campaign with identifier {identifier} does not exist.")
 
-    # async def get(self, identifier: str) -> StudyDraft:
-    #     exists = await self.exists(identifier)
-    #     if not exists:
-    #         raise Exception(
-    #             f"Study with identifier {identifier} does not exist.")
-
-    #     file_path = f"draft/{identifier}/study.json"
-    #     content, mime_type = await s3_client.get_file(file_path)
-    #     study_dict = json.loads(content)
-    #     return StudyDraft(**study_dict)
+        file_path = f"campaigns/{identifier}/campaign.json"
+        content, mime_type = await s3_client.get_file(file_path)
+        campaign_dict = json.loads(content)
+        return Campaign(**campaign_dict)

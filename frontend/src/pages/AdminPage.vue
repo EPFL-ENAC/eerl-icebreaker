@@ -25,10 +25,34 @@
         <div class="text-help q-mb-md">
           {{ $t('campaigns_info') }}
         </div>
-        <div v-if="campaigns.length === 0">
-          <q-btn @click="onAdd" color="secondary" :label="$t('add')" icon="add"/>
+        <div class="q-mb-md">
+          <q-btn
+            @click="onSave"
+            :color="hasChanges && !loading ? 'accent' : 'grey-6'"
+            :label="$t('save')"
+            icon="cloud_upload"
+            size="sm"
+            :disable="loading || !hasChanges"
+          />
+          <q-btn
+            @click="onReload"
+            :label="$t('reload')"
+            icon="refresh"
+            size="sm"
+            class="on-right"
+            :disable="loading"
+          />
+          <q-btn
+            v-show="!loading && campaigns.length === 0"
+            @click="onAdd"
+            color="secondary"
+            :label="$t('add')"
+            icon="add"
+            size="sm"
+            class="on-right"
+          />
         </div>
-        <div v-else>
+        <div v-if="campaigns.length">
           <div class="row q-gutter-md">
             <div class="col" style="max-width: 200px;">
               <div class="q-mb-md q-mt-sm">
@@ -46,7 +70,7 @@
                   />
                 </div>
               </div>
-              <q-btn @click="onAdd" color="secondary" :label="$t('add')" icon="add" size="sm" class="full-width"/>
+              <q-btn v-show="!loading" @click="onAdd" color="secondary" :label="$t('add')" icon="add" size="sm" class="full-width"/>
             </div>
             <div class="col" v-if="selected !== null && campaigns">
               <div>
@@ -104,40 +128,98 @@
         </q-card>
       </div>
     </div>
+
+    <q-dialog v-model="showReload">
+      <q-card style="width: 500px; max-width: 90hw;">
+        <q-card-section>
+          {{ $t('reload_confirmation') }}
+        </q-card-section>
+        <q-card-actions align="right">
+          <q-btn
+            flat
+            :label="$t('cancel')"
+            color="secondary"
+            v-close-popup
+          />
+          <q-btn
+            :label="$t('reload')"
+            color="primary"
+            v-close-popup
+            @click="onReloadConfirmed"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 
 <script setup lang="ts">
 import CampaignForm from 'src/components/admin/CampaignForm.vue';
+import { notifyError } from 'src/utils/notify';
 
 const authStore = useAuthStore();
 const mapStore = useMapStore();
+const adminStore = useAdminStore();
 
 const selected = ref<number | null>(null);
-const campaigns = computed(() => mapStore.campaigns || []);
+const loading = ref(false);
+const campaigns = computed(() => adminStore.campaigns || []);
+const showReload = ref(false);
+
+const hasChanges = computed(() => adminStore.hasChanges(mapStore.campaigns));
 
 onMounted(() => {
    authStore.init().then(() => {
      if (!authStore.isAuthenticated) {
        return authStore.login();
      }
-   }).then(() => {
-      mapStore.loadCampaigns().then(() => {
-        if (campaigns.value.length > 0) {
-          selected.value = 0;
-        }
-      });
-   });
-   
+   }).then(onLoad);
 })
 
+function onLoad() {
+  loading.value = true;
+  mapStore.loadCampaigns().then(() => {
+    adminStore.initCampaigns(mapStore.campaigns);
+    if (campaigns.value.length > 0) {
+      selected.value = 0;
+    }
+  }).finally(() => {
+    loading.value = false;
+  });
+}
+
+function onReload() {
+  if (hasChanges.value) {
+    showReload.value = true;
+  } else {
+    onLoad();
+  }
+}
+
+function onReloadConfirmed() {
+  onLoad();
+  showReload.value = false;
+}
+
 function onAdd() {
-  mapStore.addCampaign();
+  adminStore.addCampaign();
   selected.value = campaigns.value.length - 1;
 }
 
 function onDelete(index: number) {
-  mapStore.deleteCampaign(index);
+  adminStore.addCampaignToDelete(index);
   selected.value = index === 0 ? 0 : index - 1;
+}
+
+function onSave() {
+  loading.value = true;
+  adminStore.saveCampaigns()
+    .then(onLoad)
+    .catch((error) => {
+      notifyError(error);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
 }
 </script>

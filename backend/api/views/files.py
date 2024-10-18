@@ -5,7 +5,7 @@ import datetime
 from fastapi.datastructures import UploadFile
 from fastapi.param_functions import File
 from api.services.s3 import s3_client
-from fastapi import Depends, Security, Query, APIRouter, HTTPException
+from fastapi import Depends, Query, APIRouter, HTTPException
 from fastapi.responses import Response
 from api.utils.file_size import size_checker
 from api.auth import require_admin, User

@@ -123,7 +123,7 @@ function initCampaign(campaign: Campaign) {
         const trackFeature = new Feature({
           geometry: new LineString(trackLine),
         });
-        addFeatureLayer(campaign, pointStart, pointEnd, trackFeature);
+        addFeatureLayer(campaign, [pointStart, pointEnd, trackFeature]);
       });
     } else {
       const trackLine = [
@@ -133,16 +133,18 @@ function initCampaign(campaign: Campaign) {
       const trackFeature = new Feature({
         geometry: new LineString(trackLine),
       });
-      addFeatureLayer(campaign, pointStart, pointEnd, trackFeature);
+      addFeatureLayer(campaign, [pointStart, pointEnd, trackFeature]);
     }
+  } else {
+    addFeatureLayer(campaign, [pointStart]);
   }
 
 }
 
-function addFeatureLayer(campaign: Campaign, pointStart: Feature, pointEnd: Feature, trackFeature: Feature) {
+function addFeatureLayer(campaign: Campaign, features: [Feature]) {
   if (!map.value) return;
   const vectorSource = new VectorSource({
-    features: [pointStart, pointEnd, trackFeature],
+    features,
   });
 
   const vectorLayer = new VectorLayer({

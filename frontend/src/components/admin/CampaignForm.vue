@@ -103,7 +103,7 @@
     <div class="row q-col-gutter-md q-mb-md">
       <div class="col">
         <q-input
-          v-model="campaign.start_date"
+          v-model="campaign.end_date"
           :label="$t('end_date')"
           filled >
           <template v-slot:append>
@@ -139,7 +139,7 @@
       </div>
     </div>
     <div class="row q-col-gutter-md q-mb-md">
-      <div class="col">
+      <div class="col-12 col-lg-6">
         <div class="text-h6 q-mb-md">{{ $t('images') }}</div>
         <q-list bordered separator v-if="campaign.images && campaign.images.length" class="q-mb-md">
           <template v-for="image in campaign.images" :key="image.path">
@@ -176,7 +176,7 @@
           @update:model-value="onImageFileSelected"
         />
       </div>
-      <div class="col">
+      <div class="col-12 col-lg-6">
         <div class="text-h6 q-mb-md">{{ $t('track') }}</div>
         <div v-if="campaign.track?.file">
           <q-list bordered class="q-mb-md">
@@ -262,7 +262,7 @@
       </div>
     </div>
     <div class="row q-col-gutter-md q-mb-md">
-      <div class="col">
+      <div class="col-12 col-lg-6">
         <div class="text-h6 q-mb-md">{{ $t('fundings') }}</div>
         <q-list bordered separator v-if="campaign.fundings && campaign.fundings.length" class="q-mb-md">
           <q-item v-for="(funding, i) in campaign.fundings" :key="funding.name">
@@ -337,7 +337,7 @@
           @click="onShowFunding(undefined)"
         />
       </div>
-      <div class="col">
+      <div class="col-12 col-lg-6">
         <div class="text-h6 q-mb-md">{{ $t('references') }}</div>
         <q-list bordered separator v-if="campaign.references && campaign.references.length" class="q-mb-md">
           <q-item v-for="(reference, i) in campaign.references" :key="reference.doi">
@@ -697,9 +697,8 @@ function onImageFileSelected() {
 
 function onDeleteImage(image: FileRef) {
   // TODO delete image from server
-  adminStore.deleteFile(image).then(() => {
-    campaign.value.images = campaign.value.images.filter((i) => i.path !== image.path);
-  });
+  adminStore.addFileToDelete(image);
+  campaign.value.images = campaign.value.images.filter((i) => i.path !== image.path);
 }
 
 function onTrackFileSelected() {
@@ -728,9 +727,8 @@ function onTrackFileSelected() {
 
 function onDeleteTrack() {
   if (!campaign.value.track?.file) return;
-  adminStore.deleteFile(campaign.value.track.file).then(() => {
-    campaign.value.track = undefined;
-  });
+  adminStore.addFileToDelete(campaign.value.track.file);
+  campaign.value.track = undefined;
 }
 
 function truncateString(str: string, num: number) {
