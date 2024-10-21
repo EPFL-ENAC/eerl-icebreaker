@@ -1,6 +1,6 @@
 <template>
   <div :style="`background-color: ${isSouthPole ? '#f2efe9' : '#aad3df'};`">
-    <div :id="id" style="height: 94vh;"></div>
+    <div :id="id" :style="`height: ${embed ? 100 : 94}vh;`"></div>
   </div>
 </template>
 
@@ -29,6 +29,7 @@ import { CsvLine } from 'src/components/models';
 interface Props {
   id: string;
   projection: string;
+  embed: boolean;
 }
 const props = defineProps<Props>();
 

@@ -3,17 +3,17 @@
     <div class="bg-white float-left"
       style="
       position: absolute;
-      top: 0px;
+      top: 15px;
       right: auto;
       bottom: auto;
-      left: 0;
+      left: 8px;
       z-index: 1000;">
       <q-btn
         flat
         no-caps
         color="primary"
         size="12px"
-        icon="arrow_upward"
+        icon="north"
         :label="$t('fly_to_arctic')"
         @click="flyTo([90, 0])"
         align="left"
@@ -23,7 +23,7 @@
         no-caps
         color="primary"
         size="12px"
-        icon="arrow_downward"
+        icon="south"
         :label="$t('fly_to_antarctic')"
         @click="flyTo([-90, 0])"
         align="left"

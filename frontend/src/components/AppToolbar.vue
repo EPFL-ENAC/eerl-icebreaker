@@ -16,14 +16,6 @@
     <q-space />
     <span v-if="!$q.screen.lt.md">
       <q-btn
-        no-caps
-        color="primary"
-        class="on-left"
-        :icon="mapStore.showGlobe ? 'map' : 'public'"
-        :label="mapStore.showGlobe ? 'Show 2D' : 'Show 3D'"
-        @click="toggleShowGlobe"
-      ></q-btn>
-      <q-btn
         flat
         round
         icon="menu_book"
@@ -111,11 +103,8 @@ withDefaults(defineProps<Props>(), {
 });
 const emit = defineEmits(['toggle']);
 
-const route = useRoute();
-const router = useRouter();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
-const authStore = useAuthStore();
 
 const showIntro = ref(false);
 const showResources = ref(false);
@@ -132,11 +121,4 @@ function toggleLeftDrawer() {
   emit('toggle');
 }
 
-function toggleShowGlobe() {
-  mapStore.showGlobe = !mapStore.showGlobe;
-  settingsStore.saveSettings({ show_globe: mapStore.showGlobe } as Settings);
-  if (route.path === '/admin') {
-    router.push('/');
-  }
-}
 </script>
