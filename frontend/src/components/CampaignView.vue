@@ -1,7 +1,13 @@
 <template>
   <div>
-    <div class="text-help q-mb-md">{{ campaign.name }}</div>
-    <q-markdown :src="campaign.objectives" />
+    <div class="text-help">{{ campaign.name }}</div>
+    <div v-if="campaign.website" class="q-mt-sm">
+      <a :href="campaign.website" target="_blank" class="epfl">
+        {{ truncateString(campaign.website, 40) }}
+        <q-icon name="open_in_new" />
+      </a>
+    </div>
+    <q-markdown :src="campaign.objectives" class="q-mt-md" />
     <q-tabs v-model="tab"
       dense
       class="text-grey q-mt-md"
