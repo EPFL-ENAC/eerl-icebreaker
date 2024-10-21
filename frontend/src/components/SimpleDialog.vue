@@ -1,6 +1,6 @@
 <template>
-  <q-dialog :maximized="$q.screen.lt.sm" v-model="showDialog" @hide="onHide">
-    <q-card :style="$q.screen.lt.sm ? '' : `width: ${width ? width : '500px'}; max-width: 80vw; max-height: 90vh`">
+  <q-dialog :maximized="$q.screen.lt.md" v-model="showDialog" @hide="onHide">
+    <q-card :style="$q.screen.lt.md ? '' : `width: ${width ? width : '500px'}; max-width: 80vw; max-height: 90vh`">
       <q-card-actions>
         <div v-if="title" class="text-h6 q-pl-sm">
           {{ title }}

@@ -67,6 +67,7 @@
                 {{ campaign.platform }}
               </q-item-label>
               <q-item-label v-if="hasStartLocation" class="text-grey-8">
+                <q-icon name="location_on" color="grey-10"/>
                 {{ formatCoordinates(campaign.start_location[0], campaign.start_location[1]) }} 
                 <span v-if="hasEndLocation">
                   <q-icon name="east" color="grey-10"/>

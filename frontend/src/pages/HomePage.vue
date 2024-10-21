@@ -42,7 +42,7 @@
       v-if="mapStore.selectedCampaign"
       v-model="showCampaign"
       :title="mapStore.selectedCampaign.acronym"
-      width="800px"
+      width="900px"
       @update:model-value="onShowCampaignUpdated">
       <campaign-view :campaign="mapStore.selectedCampaign" />
     </simple-dialog>
