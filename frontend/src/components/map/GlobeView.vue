@@ -106,7 +106,7 @@ function initCampaign(campaign: Campaign) {
     position: Cartesian3.fromDegrees(start[1], start[0]),
     point: {
       pixelSize: 10,
-      color: Color.RED,
+      color: campaign.color ? Color.fromCssColorString(campaign.color) : Color.RED,
     },
   });
 
@@ -116,7 +116,7 @@ function initCampaign(campaign: Campaign) {
       position: Cartesian3.fromDegrees(end[1], end[0]),
       point: {
         pixelSize: 10,
-        color: Color.RED,
+        color: campaign.color ? Color.fromCssColorString(campaign.color) : Color.RED,
       },
     });
   }

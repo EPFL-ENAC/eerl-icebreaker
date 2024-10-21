@@ -153,10 +153,10 @@ function addFeatureLayer(campaign: Campaign, features: [Feature]) {
     style: new Style({
       image: new Circle({
         radius: 6,
-        fill: new Fill({ color: 'red' }),
+        fill: new Fill({ color: campaign.color ? campaign.color : 'red' }),
       }),
       stroke: new Stroke({
-        color: 'orange',
+        color: campaign.track?.color ? campaign.track.color : 'orange',
         width: 3,
       }),
     }),

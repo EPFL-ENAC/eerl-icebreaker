@@ -240,12 +240,12 @@
             filled
             :label="$t('color')"
             :hint="$t('track_color_hint')"
-            v-model="campaign.color"
+            v-model="campaign.track.color"
           >
             <template v-slot:append>
               <q-icon name="colorize" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-color v-model="campaign.color" />
+                  <q-color v-model="campaign.track.color" />
                 </q-popup-proxy>
               </q-icon>
             </template>
