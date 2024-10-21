@@ -66,6 +66,13 @@
               <q-item-label class="text-help">
                 {{ campaign.platform }}
               </q-item-label>
+              <q-item-label v-if="hasStartLocation" class="text-grey-8">
+                {{ formatCoordinates(campaign.start_location[0], campaign.start_location[1]) }} 
+                <span v-if="hasEndLocation">
+                  <q-icon name="east" color="grey-10"/>
+                  {{ formatCoordinates(campaign.end_location[0], campaign.end_location[1]) }}
+                </span>
+              </q-item-label>
             </q-item-section>
           </q-item>
           <q-item v-if="campaign.track">
@@ -160,6 +167,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
+import { formatCoordinates } from 'src/utils/numbers';
 
 interface Props {
   campaign: Campaign;
@@ -175,6 +183,14 @@ const imageUrls = computed(() => {
 
 const trackUrl = computed(() => {
   return props.campaign.track ? `${cdnUrl}/${props.campaign.track.file.path}` : '';
+});
+
+const hasStartLocation = computed(() => {
+  return props.campaign.start_location && props.campaign.start_location.length == 2;
+});
+
+const hasEndLocation = computed(() => {
+  return props.campaign.end_location && props.campaign.end_location.length == 2;
 });
 
 function truncateString(str: string, num: number) {
