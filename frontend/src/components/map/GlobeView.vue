@@ -39,7 +39,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined } from 'cesium';
+import { LabelStyle, Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined, HorizontalOrigin, Cartesian2 } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { Campaign } from 'src/models';
 import { CsvLine } from '../models';
@@ -107,6 +107,19 @@ function initCampaign(campaign: Campaign) {
     point: {
       pixelSize: 10,
       color: campaign.color ? Color.fromCssColorString(campaign.color) : Color.RED,
+    },
+  });
+
+  globe.value.entities.add({
+    position: Cartesian3.fromDegrees(start[1], start[0]),
+    label: {
+      text: campaign.acronym,
+      outlineColor: Color.BLACK,
+      outlineWidth: 2,
+      font: '20px sans-serif',
+      horizontalOrigin: HorizontalOrigin.CENTER,
+      pixelOffset: new Cartesian2(0.0, -20),
+      style: LabelStyle.FILL_AND_OUTLINE,
     },
   });
 

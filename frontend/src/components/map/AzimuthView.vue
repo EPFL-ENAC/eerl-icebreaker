@@ -19,7 +19,7 @@ import OSM from 'ol/source/OSM';
 import { fromLonLat, get } from 'ol/proj';
 import { Feature } from 'ol';
 import { Point, LineString } from 'ol/geom';
-import { Style, Circle, Fill, Stroke } from 'ol/style';
+import { Style, Circle, Fill, Stroke, Text } from 'ol/style';
 import { Campaign } from 'src/models';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -106,6 +106,7 @@ function initCampaign(campaign: Campaign) {
 
   const pointStart = new Feature({
     geometry: new Point(fromLonLat([start[1], start[0]], stereographicPole)),
+    name: campaign.acronym,
   });
   const pointEnd = new Feature({
     geometry: new Point(fromLonLat([end[1], end[0]], stereographicPole)),
@@ -150,10 +151,18 @@ function addFeatureLayer(campaign: Campaign, features: [Feature]) {
 
   const vectorLayer = new VectorLayer({
     source: vectorSource,
-    style: new Style({
+    style: (feature) => new Style({
       image: new Circle({
         radius: 6,
         fill: new Fill({ color: campaign.color ? campaign.color : 'red' }),
+      }),
+      // Style for the label
+      text: new Text({
+        font: '12px Calibri,sans-serif',
+        fill: new Fill({ color: '#000' }), // Text color
+        stroke: new Stroke({ color: '#fff', width: 2 }), // Outline around text
+        text: feature.get('name'), // Get the label text from the 'name' property
+        offsetY: -15 // Offset to position the label above the point
       }),
       stroke: new Stroke({
         color: campaign.track?.color ? campaign.track.color : 'orange',
