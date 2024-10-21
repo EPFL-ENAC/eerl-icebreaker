@@ -1,7 +1,10 @@
 <template>
   <q-page>
-    <div class="text-h4 q-pa-md bg-accent text-white text-weight-light">
-      {{ $t('administration') }}
+    <div class="q-pa-md bg-accent text-white text-weight-light">
+      <q-breadcrumbs class="text-h5" active-color="white">
+      <q-breadcrumbs-el icon="home" to=".."/>
+      <q-breadcrumbs-el :label="$t('administration')" />
+    </q-breadcrumbs>
     </div>
     <q-toolbar v-if="authStore.isAuthenticated" class="bg-warning">
       <span>{{ $t(authStore.isAdmin ? 'user.welcome_admin' : 'user.welcome', { name: authStore.profile?.firstName }) }}</span>
