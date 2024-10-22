@@ -1,7 +1,13 @@
 <template>
   <div>
-    <div class="text-help q-mb-md">{{ campaign.name }}</div>
-    <q-markdown :src="campaign.objectives" />
+    <div class="text-help">{{ campaign.name }}</div>
+    <div v-if="campaign.website" class="q-mt-sm">
+      <a :href="campaign.website" target="_blank" class="epfl">
+        {{ truncateString(campaign.website, 40) }}
+        <q-icon name="open_in_new" />
+      </a>
+    </div>
+    <q-markdown :src="campaign.objectives" class="q-mt-md" />
     <q-tabs v-model="tab"
       dense
       class="text-grey q-mt-md"
@@ -66,6 +72,14 @@
               <q-item-label class="text-help">
                 {{ campaign.platform }}
               </q-item-label>
+              <q-item-label v-if="hasStartLocation" class="text-grey-8">
+                <q-icon name="location_on" color="grey-10"/>
+                {{ formatCoordinates(campaign.start_location[0], campaign.start_location[1]) }} 
+                <span v-if="hasEndLocation">
+                  <q-icon name="east" color="grey-10"/>
+                  {{ formatCoordinates(campaign.end_location[0], campaign.end_location[1]) }}
+                </span>
+              </q-item-label>
             </q-item-section>
           </q-item>
           <q-item v-if="campaign.track">
@@ -75,7 +89,7 @@
             <q-item-section>
               <q-item-label>
                 <a :href="trackUrl" target="_blank" class="epfl">
-                  {{ campaign.track.file.split('/').pop() }}
+                  {{ campaign.track.file.name }}
                   <q-icon name="download" />
                 </a>
               </q-item-label>
@@ -109,8 +123,10 @@
               <div>
                 <dl>
                   <template v-for="measure in instrument.measures" :key="measure.name">
-                    <dd
-                    class="q-ma-none text-caption text-bold">{{ measure.name }}</dd>
+                    <dd class="q-ma-none">
+                      <div class="text-caption text-bold">{{ measure.name }}</div>
+                      <div v-if="measure.description" class="text-hint">{{ measure.description }}</div>
+                    </dd>
                     <dt
                       v-for="link in measure.datasets"
                       :key="link"
@@ -131,9 +147,16 @@
       </q-tab-panel>
       <q-tab-panel name="fundings">
         <q-list separator>
-          <q-item v-for="funding in campaign.fundings" :key="funding">
+          <q-item v-for="funding in campaign.fundings" :key="funding.name">
             <q-item-section>
-              <q-item-label overline>{{ funding }}</q-item-label>
+              <q-item-label overline>{{ funding.name }}</q-item-label>
+              <q-item-label v-if="funding.grant" class="text-help">{{ funding.grant }}</q-item-label>
+            </q-item-section>
+            <q-item-section v-if="funding.website">
+              <a :href="funding.website" target="_blank" class="epfl">
+                {{ truncateString(funding.website, 40) }}
+                <q-icon name="open_in_new" />
+              </a>
             </q-item-section>
           </q-item>
         </q-list>
@@ -151,6 +174,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
+import { formatCoordinates } from 'src/utils/numbers';
 
 interface Props {
   campaign: Campaign;
@@ -161,11 +185,19 @@ const tab = ref('info');
 const slide = ref(1);
 
 const imageUrls = computed(() => {
-  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}campaigns/${props.campaign.acronym}/${image}`) : [];
+  return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}/${image.path}`) : [];
 });
 
 const trackUrl = computed(() => {
-  return props.campaign.track ? `${cdnUrl}campaigns/${props.campaign.acronym}/${props.campaign.track.file}` : '';
+  return props.campaign.track ? `${cdnUrl}/${props.campaign.track.file.path}` : '';
+});
+
+const hasStartLocation = computed(() => {
+  return props.campaign.start_location && props.campaign.start_location.length == 2;
+});
+
+const hasEndLocation = computed(() => {
+  return props.campaign.end_location && props.campaign.end_location.length == 2;
 });
 
 function truncateString(str: string, num: number) {

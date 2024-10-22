@@ -1,3 +1,12 @@
+export interface FileRef {
+  name: string;
+  path: string;
+  size: number;
+  alt_name?: string;
+  alt_path?: string;
+  alt_size?: number;
+}
+
 export interface Reference {
   citation: string;
   doi: string;
@@ -16,7 +25,7 @@ export interface Instrument {
 }
 
 export interface Track {
-  file: string;
+  file: FileRef;
   columns: {
     latitude: string;
     longitude: string;
@@ -26,9 +35,17 @@ export interface Track {
   timestamp_format?: string;
 }
 
+export interface Funding {
+  name: string;
+  grant?: string;
+  website?: string;
+}
+
 export interface Campaign {
+  id: string;
   name: string;
   acronym: string;
+  website?: string;
   type?: string;
   color?: string;
   objectives?: string;
@@ -38,9 +55,9 @@ export interface Campaign {
   platform?: string;
   start_location: [number, number];
   end_location?: [number, number];
-  images?: string[];
+  images?: FileRef[];
   track?: Track;
-  fundings: string[];
+  fundings: Funding[];
   references: Reference[];
   instruments: Instrument[];
 }

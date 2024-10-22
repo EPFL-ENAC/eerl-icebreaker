@@ -1,6 +1,6 @@
 <template>
   <div :style="`background-color: ${isSouthPole ? '#f2efe9' : '#aad3df'};`">
-    <div :id="id" style="height: 94vh;"></div>
+    <div :id="id" :style="`height: ${embed ? 100 : 94}vh;`"></div>
   </div>
 </template>
 
@@ -19,7 +19,7 @@ import OSM from 'ol/source/OSM';
 import { fromLonLat, get } from 'ol/proj';
 import { Feature } from 'ol';
 import { Point, LineString } from 'ol/geom';
-import { Style, Circle, Fill, Stroke } from 'ol/style';
+import { Style, Circle, Fill, Stroke, Text } from 'ol/style';
 import { Campaign } from 'src/models';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
@@ -29,6 +29,7 @@ import { CsvLine } from 'src/components/models';
 interface Props {
   id: string;
   projection: string;
+  embed: boolean;
 }
 const props = defineProps<Props>();
 
@@ -105,6 +106,7 @@ function initCampaign(campaign: Campaign) {
 
   const pointStart = new Feature({
     geometry: new Point(fromLonLat([start[1], start[0]], stereographicPole)),
+    name: campaign.acronym,
   });
   const pointEnd = new Feature({
     geometry: new Point(fromLonLat([end[1], end[0]], stereographicPole)),
@@ -123,7 +125,7 @@ function initCampaign(campaign: Campaign) {
         const trackFeature = new Feature({
           geometry: new LineString(trackLine),
         });
-        addFeatureLayer(campaign, pointStart, pointEnd, trackFeature);
+        addFeatureLayer(campaign, [pointStart, pointEnd, trackFeature]);
       });
     } else {
       const trackLine = [
@@ -133,27 +135,37 @@ function initCampaign(campaign: Campaign) {
       const trackFeature = new Feature({
         geometry: new LineString(trackLine),
       });
-      addFeatureLayer(campaign, pointStart, pointEnd, trackFeature);
+      addFeatureLayer(campaign, [pointStart, pointEnd, trackFeature]);
     }
+  } else {
+    addFeatureLayer(campaign, [pointStart]);
   }
 
 }
 
-function addFeatureLayer(campaign: Campaign, pointStart: Feature, pointEnd: Feature, trackFeature: Feature) {
+function addFeatureLayer(campaign: Campaign, features: [Feature]) {
   if (!map.value) return;
   const vectorSource = new VectorSource({
-    features: [pointStart, pointEnd, trackFeature],
+    features,
   });
 
   const vectorLayer = new VectorLayer({
     source: vectorSource,
-    style: new Style({
+    style: (feature) => new Style({
       image: new Circle({
         radius: 6,
-        fill: new Fill({ color: 'red' }),
+        fill: new Fill({ color: campaign.color ? campaign.color : 'red' }),
+      }),
+      // Style for the label
+      text: new Text({
+        font: '12px Calibri,sans-serif',
+        fill: new Fill({ color: '#000' }), // Text color
+        stroke: new Stroke({ color: '#fff', width: 2 }), // Outline around text
+        text: feature.get('name'), // Get the label text from the 'name' property
+        offsetY: -15 // Offset to position the label above the point
       }),
       stroke: new Stroke({
-        color: 'orange',
+        color: campaign.track?.color ? campaign.track.color : 'orange',
         width: 3,
       }),
     }),

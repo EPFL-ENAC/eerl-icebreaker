@@ -5,9 +5,13 @@ from functools import lru_cache
 
 class Config(BaseSettings):
 
-    API_KEYS: str
-
     PATH_PREFIX: str = "/api"
+
+    # Keycloak
+    KEYCLOAK_REALM: str = "EERL"
+    KEYCLOAK_URL: str = "https://enac-it-sso.epfl.ch"
+    KEYCLOAK_API_ID: str
+    KEYCLOAK_API_SECRET: str
 
     S3_ENDPOINT_PROTOCOL: str
     S3_ENDPOINT_HOSTNAME: str

@@ -16,14 +16,6 @@
     <q-space />
     <span v-if="!$q.screen.lt.md">
       <q-btn
-        no-caps
-        color="primary"
-        class="on-left"
-        :icon="mapStore.showGlobe ? 'map' : 'public'"
-        :label="mapStore.showGlobe ? 'Show 2D' : 'Show 3D'"
-        @click="toggleShowGlobe"
-      ></q-btn>
-      <q-btn
         flat
         round
         icon="menu_book"
@@ -36,12 +28,24 @@
         icon="info"
         :title="$t('introduction')"
         @click="showIntro = true"
+      ></q-btn>
+      <q-btn
+        flat
+        round
+        icon="settings"
+        :title="$t('administration')"
+        :to="'/admin'"
         class="on-left"
       ></q-btn>
     </span>
     <q-btn v-if="$q.screen.lt.md" flat round icon="more_vert">
       <q-popup-proxy>
         <q-list class="bg-white">
+          <q-item clickable v-close-popup :to="'/admin'">
+            <q-item-section>
+              <q-item-label>{{ $t('administration') }}</q-item-label>
+            </q-item-section>
+          </q-item>
           <q-item clickable v-close-popup @click="showResources = true">
             <q-item-section>
               <q-item-label>{{ $t('resources') }}</q-item-label>
@@ -117,8 +121,4 @@ function toggleLeftDrawer() {
   emit('toggle');
 }
 
-function toggleShowGlobe() {
-  mapStore.showGlobe = !mapStore.showGlobe;
-  settingsStore.saveSettings({ show_globe: mapStore.showGlobe } as Settings);
-}
 </script>

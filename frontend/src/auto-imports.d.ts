@@ -74,7 +74,9 @@ declare global {
   const toValue: typeof import('vue')['toValue']
   const triggerRef: typeof import('vue')['triggerRef']
   const unref: typeof import('vue')['unref']
+  const useAdminStore: typeof import('./stores/admin')['useAdminStore']
   const useAttrs: typeof import('vue')['useAttrs']
+  const useAuthStore: typeof import('./stores/auth')['useAuthStore']
   const useCatalogStore: typeof import('./stores/catalog')['useCatalogStore']
   const useContributeStore: typeof import('./stores/contribute')['useContributeStore']
   const useCounterStore: (typeof import('./stores/help'))['useCounterStore']
@@ -175,7 +177,9 @@ declare module 'vue' {
     readonly toValue: UnwrapRef<typeof import('vue')['toValue']>
     readonly triggerRef: UnwrapRef<typeof import('vue')['triggerRef']>
     readonly unref: UnwrapRef<typeof import('vue')['unref']>
+    readonly useAdminStore: UnwrapRef<typeof import('./stores/admin')['useAdminStore']>
     readonly useAttrs: UnwrapRef<typeof import('vue')['useAttrs']>
+    readonly useAuthStore: UnwrapRef<typeof import('./stores/auth')['useAuthStore']>
     readonly useCssModule: UnwrapRef<typeof import('vue')['useCssModule']>
     readonly useCssVars: UnwrapRef<typeof import('vue')['useCssVars']>
     readonly useHelpStore: UnwrapRef<typeof import('./stores/help')['useHelpStore']>

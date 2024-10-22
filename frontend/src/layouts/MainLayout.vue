@@ -1,6 +1,6 @@
 <template>
   <q-layout view="hHh lpR fFf">
-    <q-header bordered class="bg-white text-grey-10">
+    <q-header v-if="!isEmbeded" bordered class="bg-white text-grey-10">
       <app-toolbar @toggle="toggleLeftDrawer" no-menu />
     </q-header>
 
@@ -39,9 +39,13 @@ import AppToolbar from 'src/components/AppToolbar.vue';
 import LayersDrawer from 'src/components/LayersDrawer.vue';
 import HelpDrawer from 'src/components/HelpDrawer.vue';
 
+const route = useRoute();
+
 const helpStore = useHelpStore();
 
 const leftDrawerOpen = ref(false);
+
+const isEmbeded = computed(() => route.query.embed !== undefined && route.query.embed !== 'false' && route.query.embed !== '0');
 
 function toggleLeftDrawer() {
   leftDrawerOpen.value = !leftDrawerOpen.value;
