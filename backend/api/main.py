@@ -6,6 +6,7 @@ from logging import basicConfig, INFO
 from pydantic import BaseModel
 from api.views.files import router as files_router
 from api.views.campaigns import router as campaigns_router
+from api.views.settings import router as settings_router
 
 basicConfig(level=INFO)
 
@@ -49,4 +50,10 @@ app.include_router(
     campaigns_router,
     prefix="/catalog",
     tags=["Catalog"],
+)
+
+app.include_router(
+    settings_router,
+    prefix="/settings",
+    tags=["Settings"],
 )

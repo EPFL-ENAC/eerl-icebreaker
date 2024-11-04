@@ -1,5 +1,5 @@
 <template>
-  <div :style="`background-color: ${isSouthPole ? '#f2efe9' : '#aad3df'};`">
+  <div :style="`background-color: ${isSouthPole ? '#dadddf' : '#000000'};`">
     <div :id="id" :style="`height: ${embed ? 100 : 94}vh;`"></div>
   </div>
 </template>
@@ -15,7 +15,7 @@ import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
+import { StadiaMaps } from 'ol/source';
 import { fromLonLat, get } from 'ol/proj';
 import { Feature } from 'ol';
 import { Point, LineString } from 'ol/geom';
@@ -25,6 +25,7 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Select from 'ol/interaction/Select';
 import { CsvLine } from 'src/components/models';
+import { api } from 'src/boot/api';
 
 interface Props {
   id: string;
@@ -68,19 +69,25 @@ watch(
   },
 );
 
-function initialize() {
+async function initialize() {
   selectInteractions.value = [];
   const stereographicPole = get(props.projection);
   if (!stereographicPole) {
     console.error('Projection not found');
     return;
   }
+
+  const stadiaMapLayer = new TileLayer({
+    source: new StadiaMaps({
+      layer: 'alidade_satellite',
+      retina: true,
+      apiKey: await api.get('/settings').then((response) => response.data.map_api_key),
+    }),
+  });
   map.value = new Map({
     target: props.id,
     layers: [
-      new TileLayer({
-        source: new OSM(),
-      }),
+      stadiaMapLayer,
     ],
     view: new View({
       center: fromLonLat(isSouthPole.value ? [0, -90] : [0, 90], stereographicPole),

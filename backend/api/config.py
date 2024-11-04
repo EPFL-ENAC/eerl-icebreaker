@@ -21,6 +21,8 @@ class Config(BaseSettings):
     S3_BUCKET: str
     S3_PATH_PREFIX: str
 
+    MAP_API_KEY: str
+
 
 @lru_cache()
 def get_config():
