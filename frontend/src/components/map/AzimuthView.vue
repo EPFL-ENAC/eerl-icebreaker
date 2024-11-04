@@ -1,5 +1,5 @@
 <template>
-  <div :style="`background-color: ${isSouthPole ? '#dadddf' : '#000000'};`">
+  <div :style="`background-color: ${isSouthPole ? '#ffffff' : '#004255'};`">
     <div :id="id" :style="`height: ${embed ? 100 : 94}vh;`"></div>
   </div>
 </template>
@@ -15,7 +15,7 @@ import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import { StadiaMaps } from 'ol/source';
+import { XYZ } from 'ol/source';
 import { fromLonLat, get } from 'ol/proj';
 import { Feature } from 'ol';
 import { Point, LineString } from 'ol/geom';
@@ -25,7 +25,6 @@ import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Select from 'ol/interaction/Select';
 import { CsvLine } from 'src/components/models';
-import { api } from 'src/boot/api';
 
 interface Props {
   id: string;
@@ -76,18 +75,16 @@ async function initialize() {
     console.error('Projection not found');
     return;
   }
-
-  const stadiaMapLayer = new TileLayer({
-    source: new StadiaMaps({
-      layer: 'alidade_satellite',
-      retina: true,
-      apiKey: await api.get('/settings').then((response) => response.data.map_api_key),
-    }),
+  const arcgisWorldImageryLayer = new TileLayer({
+    source: new XYZ({
+      url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      maxZoom: 19 // ArcGIS World Imagery max zoom level
+    })
   });
   map.value = new Map({
     target: props.id,
     layers: [
-      stadiaMapLayer,
+      arcgisWorldImageryLayer,
     ],
     view: new View({
       center: fromLonLat(isSouthPole.value ? [0, -90] : [0, 90], stereographicPole),
