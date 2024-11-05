@@ -28,6 +28,7 @@ export const useMapStore = defineStore('map', () => {
     if (tracks.value && tracks.value[trackUrl]) {
       return callback(tracks.value[trackUrl]);
     }
+    const columns = campaign.track.columns;
     Papa.parse(trackUrl, {
       download: true,
       skipEmptyLines: true,
@@ -40,10 +41,16 @@ export const useMapStore = defineStore('map', () => {
           return;
         }
         tracks.value = tracks.value || {};
-        tracks.value[trackUrl] = results.data;
-        callback(results.data);
+        tracks.value[trackUrl] = results.data.filter((line: CsvLine) => {
+          return isNumber(line[columns.latitude]) && isNumber(line[columns.longitude]);
+        });
+        callback(tracks.value[trackUrl]);
       },
     });
+  }
+
+  function isNumber(value: string | number): boolean {
+    return typeof value === 'number' && !isNaN(value);
   }
 
   return {
