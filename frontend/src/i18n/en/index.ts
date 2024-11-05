@@ -61,4 +61,5 @@ export default {
   reload_confirmation: 'You have pending changes. Are you sure you want to reload the page? All unsaved changes will be lost.',
   measures: 'Measures',
   published_datasets: 'Published datasets',
+  source_code: 'Source code',
 };
