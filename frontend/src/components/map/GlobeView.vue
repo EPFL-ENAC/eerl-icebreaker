@@ -11,6 +11,7 @@
       <q-btn
         flat
         no-caps
+        square
         color="primary"
         size="12px"
         icon="north"
@@ -21,6 +22,7 @@
       <q-btn
         flat
         no-caps
+        square
         color="primary"
         size="12px"
         icon="south"

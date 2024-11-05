@@ -1,10 +1,10 @@
 <template>
   <q-page>
-    <div class="q-pa-md bg-accent text-white text-weight-light">
-      <q-breadcrumbs class="text-h5" active-color="white">
-      <q-breadcrumbs-el icon="home" to=".."/>
-      <q-breadcrumbs-el :label="$t('administration')" />
-    </q-breadcrumbs>
+    <div class="q-pa-md bg-accent text-white">
+      <q-breadcrumbs active-color="white" separator="">
+        <q-breadcrumbs-el icon="arrow_back" to=".."/>
+        <q-breadcrumbs-el :label="$t('administration')" />
+      </q-breadcrumbs>
     </div>
     <q-toolbar v-if="authStore.isAuthenticated" class="bg-warning">
       <span>{{ $t(authStore.isAdmin ? 'user.welcome_admin' : 'user.welcome', { name: authStore.profile?.firstName }) }}</span>

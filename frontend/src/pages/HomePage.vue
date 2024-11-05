@@ -20,21 +20,7 @@
         <globe-view />
       </div>
       <div v-else>
-        <q-splitter
-          v-model="split"
-          :horizontal="$q.screen.lt.md"
-        >
-          <template v-slot:before>
-            <azimuth-view id="north" projection="EPSG:3995" :embed="isEmbeded" />
-          </template>
-
-          <template v-slot:separator>
-            <q-avatar color="primary" text-color="white" size="40px" icon="drag_indicator" />
-          </template>
-          <template v-slot:after>
-            <azimuth-view id="south" projection="EPSG:3031" :embed="isEmbeded" />
-          </template>
-        </q-splitter> 
+        <azimuth-views />
       </div>
     </div>
     
@@ -53,7 +39,8 @@
 import SimpleDialog from 'src/components/SimpleDialog.vue';
 import CampaignView from 'src/components/CampaignView.vue';
 import GlobeView from 'src/components/map/GlobeView.vue';
-import AzimuthView from 'src/components/map/AzimuthView.vue';
+import AzimuthViews from 'src/components/map/AzimuthViews.vue';
+
 import { Settings } from 'src/stores/settings';
 
 const route = useRoute();
@@ -61,10 +48,7 @@ const router = useRouter();
 const settingsStore = useSettingsStore();
 const mapStore = useMapStore();
 
-const split = ref(50);
 const showCampaign = ref(false);
-
-const isEmbeded = computed(() => route.query.embed !== undefined && route.query.embed !== 'false' && route.query.embed !== '0');
 
 onMounted(() => {
   mapStore.loadCampaigns();

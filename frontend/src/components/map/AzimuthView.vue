@@ -24,6 +24,7 @@ import { Campaign } from 'src/models';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Select from 'ol/interaction/Select';
+import { FullScreen, Attribution } from 'ol/control';
 import { CsvLine } from 'src/components/models';
 
 interface Props {
@@ -75,13 +76,19 @@ async function initialize() {
     console.error('Projection not found');
     return;
   }
+
+const attributions =
+  '<a href="https://esri.maps.arcgis.com/home" target="_blank">&copy; Esri World Imagery</a> ' +
+  '<a href="https://www.epfl.ch/labs/eerl/" target="_blank">&copy; EPFL - EERL</a>';
   const arcgisWorldImageryLayer = new TileLayer({
     source: new XYZ({
+      attributions: attributions,
       url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-      maxZoom: 19 // ArcGIS World Imagery max zoom level
+      maxZoom: 16 // ArcGIS World Imagery max zoom level
     })
   });
   map.value = new Map({
+    controls: [new FullScreen(), new Attribution()],
     target: props.id,
     layers: [
       arcgisWorldImageryLayer,
