@@ -51,10 +51,11 @@ const mapStore = useMapStore();
 const globe = ref<Viewer | null>(null);
 
 onMounted(() => {
-  initialize('globe');
-  if (mapStore.campaignsLoaded) {
-    mapStore.campaigns.forEach((exp: Campaign) => initCampaign(exp)); 
-  }
+  initialize('globe').then(() => {
+    if (mapStore.campaignsLoaded) {
+      mapStore.campaigns.forEach((exp: Campaign) => initCampaign(exp)); 
+    }
+  });
 });
 
 watch(
