@@ -21,6 +21,10 @@ class Config(BaseSettings):
     S3_BUCKET: str
     S3_PATH_PREFIX: str
 
+    REDIS_URL: str = "redis://localhost"
+    CACHE_API_EXPIRY: int = 3600
+    CACHE_SOURCE_EXPIRY: int = 3600
+
     MAP_API_KEY: str
 
 
