@@ -3,6 +3,7 @@ import { Campaign } from 'src/models';
 import { api, cdnUrl } from 'src/boot/api';
 import { CsvLine, CsvParseCallback } from 'src/components/models';
 import Papa from 'papaparse';
+import { Ion } from 'cesium';
 
 export const useMapStore = defineStore('map', () => {
 
@@ -12,6 +13,16 @@ export const useMapStore = defineStore('map', () => {
   const campaigns = ref<Campaign[]>([]);
   const showGlobe = ref(false);
   const tracks = ref<{ [key: string]: CsvLine[] }>();
+
+  async function loadCesiumAccessToken() {
+    if (Ion.defaultAccessToken) return;
+    try {
+      const resp = await api.get('/settings');
+      Ion.defaultAccessToken = resp.data.map_api_key;
+    } catch (error) {
+      console.error('Error loading Cesium access token', error);
+    }
+  }
 
   async function loadCampaigns() {
     campaignsLoaded.value = false;
@@ -59,6 +70,7 @@ export const useMapStore = defineStore('map', () => {
     campaignsLoaded,
     campaigns,
     showGlobe,
+    loadCesiumAccessToken,
     loadCampaigns,
     getTrackData,
   };

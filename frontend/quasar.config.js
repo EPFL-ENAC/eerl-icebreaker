@@ -67,7 +67,6 @@ module.exports = configure(function (ctx) {
         API_URL: ctx.dev ? 'http://localhost:8000' : process.env.API_URL,
         API_PATH: ctx.dev ? '' : process.env.API_PATH,
         AUTH_CLIENT_ID: ctx.dev ? 'local-ui' : process.env.AUTH_CLIENT_ID,
-        CESIUM_ACCESS_TOKEN: ctx.dev ? '' : process.env.CESIUM_ACCESS_TOKEN,
       },
       // rawDefine: {}
       // ignorePublicFolder: true,

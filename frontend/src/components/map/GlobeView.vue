@@ -76,7 +76,8 @@ watch(
   },
 );
 
-function initialize(id: string) {
+async function initialize(id: string) {
+  await mapStore.loadCesiumAccessToken();
   globe.value = new Viewer(id, {
     animation: false,
     baseLayerPicker: true,
@@ -94,7 +95,9 @@ function initialize(id: string) {
     //skyBox: false,
     //skyAtmosphere: false,
     vrButton: false,
+    creditContainer: document.createElement('div'),  // Empty div to remove default credits
   });
+
   flyTo([90, 0], 0);
 }
 
