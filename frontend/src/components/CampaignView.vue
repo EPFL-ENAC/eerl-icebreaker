@@ -18,7 +18,7 @@
       <q-tab name="info" :label="$t('info')" />
       <q-tab name="references" :label="$t('references')" />
       <q-tab name="instruments" :label="$t('instrument_measures')" />
-      <q-tab name="fundings" :label="$t('fundings')" />
+      <q-tab name="fundings" :label="$t('funding')" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab" animated>

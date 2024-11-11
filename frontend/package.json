@@ -1,8 +1,8 @@
 {
-  "name": "icebraker",
-  "version": "0.0.1",
-  "description": "EPFL EERL IceBreaker",
-  "productName": "IceBreaker",
+  "name": "icebreaker",
+  "version": "1.0.0",
+  "description": "EERL field campaign overview",
+  "productName": "EERL Campaigns",
   "author": "ENAC IT4R <enacit4research@epfl.ch>",
   "private": true,
   "scripts": {

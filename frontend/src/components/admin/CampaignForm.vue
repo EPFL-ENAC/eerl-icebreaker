@@ -265,7 +265,7 @@
     </div>
     <div class="row q-col-gutter-md q-mb-md">
       <div class="col-12 col-lg-6">
-        <div class="text-h6 q-mb-md">{{ $t('fundings') }}</div>
+        <div class="text-h6 q-mb-md">{{ $t('funding') }}</div>
         <q-list bordered separator v-if="campaign.fundings && campaign.fundings.length" class="q-mb-md">
           <q-item v-for="(funding, i) in campaign.fundings" :key="funding.name">
             <q-item-section>
