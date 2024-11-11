@@ -95,7 +95,7 @@ const attributions =
     ],
     view: new View({
       center: fromLonLat(isSouthPole.value ? [0, -90] : [0, 90], stereographicPole),
-      zoom: 4,
+      zoom: isSouthPole.value ? 3 : 4,
       projection: props.projection,
     }),
   });
