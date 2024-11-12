@@ -580,9 +580,30 @@ vault = ["hvac"]
 yaml = ["ruamel.yaml"]
 
 [[package]]
-name = "enacit4r"
-version = "0.1.0"
-description = "Python utils for EPFL ENAC IT4R developments"
+name = "enacit4r-auth"
+version = "0.3.0"
+description = "Python authz utils for EPFL ENAC IT4R developments"
+optional = false
+python-versions = "^3.10"
+files = []
+develop = false
+
+[package.dependencies]
+fastapi = "^0.115.4"
+pydantic = "^2.9.2"
+python-keycloak = "^4.7.0"
+
+[package.source]
+type = "git"
+url = "https://github.com/EPFL-ENAC/enacit4r-pyutils"
+reference = "0.3.0"
+resolved_reference = "412dede1dfde87dfe789fefaa2d945e03b88a1ba"
+subdirectory = "auth"
+
+[[package]]
+name = "enacit4r-files"
+version = "0.3.0"
+description = "Python file utils for EPFL ENAC IT4R developments"
 optional = false
 python-versions = "^3.10"
 files = []
@@ -597,8 +618,9 @@ pydantic = "^2.9.2"
 [package.source]
 type = "git"
 url = "https://github.com/EPFL-ENAC/enacit4r-pyutils"
-reference = "0.1.0"
-resolved_reference = "cea912f75a2fdca0d4b673796fffceec9045de6b"
+reference = "0.3.0"
+resolved_reference = "412dede1dfde87dfe789fefaa2d945e03b88a1ba"
+subdirectory = "files"
 
 [[package]]
 name = "et-xmlfile"
@@ -1101,13 +1123,13 @@ et-xmlfile = "*"
 
 [[package]]
 name = "packaging"
-version = "24.1"
+version = "24.2"
 description = "Core utilities for Python packages"
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "packaging-24.1-py3-none-any.whl", hash = "sha256:5b8f2217dbdbd2f7f384c41c628544e6d52f2d0f53c6d0c3ea61aa5d1d7ff124"},
-    {file = "packaging-24.1.tar.gz", hash = "sha256:026ed72c8ed3fcce5bf8950572258698927fd1dbda10a5e981cdf0ac37f4f002"},
+    {file = "packaging-24.2-py3-none-any.whl", hash = "sha256:09abb1bccd265c01f4a3aa3f7a7db064b36514d2cba19a2f694fe6150451a759"},
+    {file = "packaging-24.2.tar.gz", hash = "sha256:c228a6dc5e932d346bc5739379109d49e8853dd8223571c7c5b55260edc0b97f"},
 ]
 
 [[package]]
@@ -2129,4 +2151,4 @@ propcache = ">=0.2.0"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1b6880827a214e7ae4b6ab688a2baa5a9e8684e09d6699d0c457f7604a025d81"
+content-hash = "89dff208f39e84c7acad271827d8875ee20d9ae571b5fa0817de88739f2f5d8d"

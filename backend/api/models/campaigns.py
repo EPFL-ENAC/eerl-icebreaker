@@ -1,6 +1,6 @@
 from typing import List, Optional, Tuple
 from pydantic import BaseModel
-from enacit4r.models.files import FileRef
+from enacit4r_files.models.files import FileRef
 
 
 class Reference(BaseModel):

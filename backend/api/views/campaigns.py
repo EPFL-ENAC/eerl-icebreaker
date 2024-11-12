@@ -4,7 +4,7 @@ from fastapi.responses import Response
 from fastapi_cache.decorator import cache
 from api.services.campaigns import CampaignsService
 from api.models.campaigns import Campaign
-from api.auth import require_admin, User
+from api.auth import kc_service, User
 from api.config import config
 
 router = APIRouter()
@@ -23,7 +23,7 @@ async def get_campaigns(
 @router.post("/campaigns", status_code=201, response_model=List[Campaign])
 async def create_or_update_campaigns(
     campaigns: List[Campaign],
-    user: User = Depends(require_admin),
+    user: User = Depends(kc_service.require_admin()),
 ):
     """Create or update campaigns, move temporary files to there final location"""
     service = CampaignsService()
@@ -45,7 +45,7 @@ async def get_campaign(
 @router.delete("/campaign/{identifier}", response_model=List[Campaign])
 async def delete_campaign(
     identifier: str,
-    user: User = Depends(require_admin),
+    user: User = Depends(kc_service.require_admin()),
 ) -> List[Campaign]:
     """Delete a campaign and associated files"""
     service = CampaignsService()
