@@ -169,7 +169,7 @@ function addFeatureLayer(campaign: Campaign, features: [Feature]) {
       }),
       // Style for the label
       text: new Text({
-        font: '12px Calibri,sans-serif',
+        font: '16px Calibri,sans-serif',
         fill: new Fill({ color: '#000' }), // Text color
         stroke: new Stroke({ color: '#fff', width: 2 }), // Outline around text
         text: feature.get('name'), // Get the label text from the 'name' property
