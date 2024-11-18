@@ -5,6 +5,7 @@ from enacit4r_files.models.files import FileRef
 
 class Reference(BaseModel):
     citation: str
+    title: Optional[str] = None
     doi: str
 
 

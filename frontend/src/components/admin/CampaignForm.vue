@@ -347,6 +347,7 @@
           <q-item v-for="(reference, i) in campaign.references" :key="reference.doi">
             <q-item-section>
               <q-item-label overline>{{ reference.citation }}</q-item-label>
+              <q-item-label class="text-help">{{ reference.title }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <a :href="`https://doi.org/${reference.doi}`" target="_blank" class="epfl">
@@ -559,6 +560,12 @@
             class="q-mb-md"
           />
           <q-input
+            v-model="editedReference.title"
+            :label="$t('title')"
+            filled
+            class="q-mb-md"
+          />
+          <q-input
             v-model="editedReference.doi"
             :label="$t('doi')"
             filled
@@ -699,7 +706,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { Campaign } from 'src/models';
+import { Campaign, Funding, Reference, Instrument, FileRef } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
 import { FileObject } from 'src/components/models';
 
@@ -800,7 +807,7 @@ function onTrackFileSelected() {
           timestamp: 'timestamp',
         },
         timestamp_format: 'yyyy-MM-dd HH:mm',
-        color: null,
+        color: undefined,
 
       };
     } else {
@@ -829,7 +836,7 @@ function truncateString(str: string, num: number) {
 function onShowFunding(funding: Funding | undefined) {
   showFundingDialog.value = true;
   selectedFunding.value = funding;
-  editedFunding.value = { ...funding} || {
+  editedFunding.value = funding ? { ...funding} : {
     name: '',
     grant: '',
     website: '',
@@ -874,8 +881,9 @@ function onFundingDown(funding: Funding) {
 function onShowReference(reference: Reference) {
   showReferenceDialog.value = true;
   selectedReference.value = reference;
-  editedReference.value = { ...reference} || {
+  editedReference.value = reference ? { ...reference } : {
     citation: '',
+    title: '',
     doi: '',
   };
 }

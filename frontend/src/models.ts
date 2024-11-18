@@ -9,6 +9,7 @@ export interface FileRef {
 
 export interface Reference {
   citation: string;
+  title?: string;
   doi: string;
 }
 

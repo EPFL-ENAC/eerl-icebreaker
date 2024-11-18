@@ -102,6 +102,7 @@
           <q-item v-for="reference in campaign.references" :key="reference.doi">
             <q-item-section>
               <q-item-label overline>{{ reference.citation }}</q-item-label>
+              <q-item-label class="text-help">{{ reference.title }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <a :href="`https://doi.org/${reference.doi}`" target="_blank" class="epfl">
