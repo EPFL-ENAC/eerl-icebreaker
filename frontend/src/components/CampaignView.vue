@@ -201,9 +201,10 @@ const hasEndLocation = computed(() => {
 });
 
 function truncateString(str: string, num: number) {
-  if (str.length <= num) {
-    return str;
+  let newstr = str.replace('https://', '');
+  if (newstr.length <= num) {
+    return newstr;
   }
-  return str.slice(0, num) + '...';
+  return newstr.slice(0, num) + '...';
 }
 </script>
