@@ -173,7 +173,8 @@ function addFeatureLayer(campaign: Campaign, features: [Feature]) {
         fill: new Fill({ color: '#000' }), // Text color
         stroke: new Stroke({ color: '#fff', width: 2 }), // Outline around text
         text: feature.get('name'), // Get the label text from the 'name' property
-        offsetY: -15 // Offset to position the label above the point
+        offsetY: typeof campaign.offsetY === 'number' ? campaign.offsetY : -15, // Offset to position the label above/beneath the point
+        offsetX: typeof campaign.offsetX === 'number' ? campaign.offsetX : 0, // Offset to position the label aside the point
       }),
       stroke: new Stroke({
         color: campaign.track?.color ? campaign.track.color : 'orange',

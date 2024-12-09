@@ -59,6 +59,8 @@ class Campaign(BaseModel):
     fundings: Optional[List[Funding]] = None
     references: Optional[List[Reference]] = None
     instruments: Optional[List[Instrument]] = None
+    offsetX: Optional[float] = None
+    offsetY: Optional[float] = None
 
 
 class CampaignStore(BaseModel):

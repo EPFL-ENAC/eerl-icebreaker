@@ -61,6 +61,8 @@ export interface Campaign {
   fundings: Funding[];
   references: Reference[];
   instruments: Instrument[];
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export interface CampaignStore {

@@ -46,21 +46,6 @@
           filled
         />
       </div>
-      <div class="col">
-        <q-input
-          filled
-          :label="$t('color')"
-          v-model="campaign.color"
-        >
-          <template v-slot:append>
-            <q-icon name="colorize" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-color v-model="campaign.color" />
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
-      </div>
     </div>
     <div class="row q-col-gutter-md q-mb-md">
       <div class="col">
@@ -135,6 +120,44 @@
           filled
           type="number"
           @update:model-value="onEndLocationLonUpdate"
+        />
+      </div>
+    </div>
+    <div class="row q-col-gutter-md q-mb-md">
+      <div class="col">
+        <q-input
+          filled
+          :label="$t('color')"
+          :hint="$t('color_hint')"
+          v-model="campaign.color"
+        >
+          <template v-slot:append>
+            <q-icon name="colorize" class="cursor-pointer">
+              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                <q-color v-model="campaign.color" />
+              </q-popup-proxy>
+            </q-icon>
+          </template>
+        </q-input>
+      </div>
+      <div class="col">
+        <q-input
+          v-model="campaign.offsetX"
+          :label="$t('offset_x')"
+            :hint="$t('offset_x_hint')"
+          filled
+          type="number"
+          @update:model-value="onOffsetUpdate"
+        />
+      </div>
+      <div class="col">
+        <q-input
+          v-model="campaign.offsetY"
+          :label="$t('offset_y')"
+            :hint="$t('offset_y_hint')"
+          filled
+          type="number"
+          @update:model-value="onOffsetUpdate"
         />
       </div>
     </div>
@@ -768,6 +791,15 @@ function onEndLocationLonUpdate() {
     campaign.value.end_location = [];
   }
   campaign.value.end_location[1] = end_location_lon.value || undefined;
+}
+
+function onOffsetUpdate() {
+  if (campaign.value.offsetX === '') {
+    campaign.value.offsetX = undefined;
+  }
+  if (campaign.value.offsetY === '') {
+    campaign.value.offsetY = undefined;
+  }
 }
 
 function onImageFileSelected() {

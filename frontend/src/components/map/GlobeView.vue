@@ -116,6 +116,9 @@ function initCampaign(campaign: Campaign) {
     },
   });
 
+  const offsetX = typeof campaign.offsetX === 'number' ? campaign.offsetX : 0;
+  const offsetY = typeof campaign.offsetY === 'number' ? campaign.offsetY : -15;
+
   globe.value.entities.add({
     position: Cartesian3.fromDegrees(start[1], start[0]),
     label: {
@@ -124,7 +127,7 @@ function initCampaign(campaign: Campaign) {
       outlineWidth: 2,
       font: '20px sans-serif',
       horizontalOrigin: HorizontalOrigin.CENTER,
-      pixelOffset: new Cartesian2(0.0, -20),
+      pixelOffset: new Cartesian2(offsetX, offsetY),
       style: LabelStyle.FILL_AND_OUTLINE,
     },
   });

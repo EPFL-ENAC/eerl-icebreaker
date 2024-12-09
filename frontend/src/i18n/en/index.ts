@@ -63,4 +63,9 @@ export default {
   track: 'Track',
   upload_file_hint: 'Drag and drop a file here or click to upload a file.',
   website: 'Website',
+  color_hint: 'The color of the start/end points.',
+  offset_x: 'Offset X',
+  offset_x_hint: 'The horizontal offset in pixels from the start point to place the campaign acronym label. Negative values goes left (default is 0).',
+  offset_y: 'Offset Y',
+  offset_y_hint: 'The vertical offset in pixels from the start point to place the campaign acronym label. Negative values goes up (default is -15).',
 };
