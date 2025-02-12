@@ -3,15 +3,15 @@
     <div class="q-pa-md bg-accent text-white">
       <q-breadcrumbs active-color="white" separator="">
         <q-breadcrumbs-el icon="arrow_back" to=".."/>
-        <q-breadcrumbs-el :label="$t('administration')" />
+        <q-breadcrumbs-el :label="t('administration')" />
       </q-breadcrumbs>
     </div>
     <q-toolbar v-if="authStore.isAuthenticated" class="bg-warning">
-      <span>{{ $t(authStore.isAdmin ? 'user.welcome_admin' : 'user.welcome', { name: authStore.profile?.firstName }) }}</span>
+      <span>{{ t(authStore.isAdmin ? 'user.welcome_admin' : 'user.welcome', { name: authStore.profile?.firstName }) }}</span>
       <q-btn
         color="primary"
         no-caps
-        :label="$t('user.logout')"
+        :label="t('user.logout')"
         @click="authStore.logout" 
         size="sm"
         class="on-right"
@@ -23,23 +23,23 @@
       </div>
       <div v-else-if="authStore.isAdmin">
         <div class="text-h5">
-          {{ $t('campaigns') }}
+          {{ t('campaigns') }}
         </div>
         <div class="text-help q-mb-md">
-          {{ $t('campaigns_info') }}
+          {{ t('campaigns_info') }}
         </div>
         <div class="q-mb-md">
           <q-btn
             @click="onSave"
             :color="hasChanges && !loading ? 'accent' : 'grey-6'"
-            :label="$t('save')"
+            :label="t('save')"
             icon="cloud_upload"
             size="sm"
             :disable="loading || !hasChanges"
           />
           <q-btn
             @click="onReload"
-            :label="$t('reload')"
+            :label="t('reload')"
             icon="refresh"
             size="sm"
             class="on-right"
@@ -49,7 +49,7 @@
             v-show="!loading && campaigns.length === 0"
             @click="onAdd"
             color="secondary"
-            :label="$t('add')"
+            :label="t('add')"
             icon="add"
             size="sm"
             class="on-right"
@@ -73,7 +73,7 @@
                   />
                 </div>
               </div>
-              <q-btn v-show="!loading" @click="onAdd" color="secondary" :label="$t('add')" icon="add" size="sm" class="full-width"/>
+              <q-btn v-show="!loading" @click="onAdd" color="secondary" :label="t('add')" icon="add" size="sm" class="full-width"/>
             </div>
             <div class="col" v-if="selected !== null && campaigns">
               <div>
@@ -87,7 +87,7 @@
                     dense
                     flat
                     color="negative"
-                    :title="$t('delete')"
+                    :title="t('delete')"
                     icon="delete"
                     @click="onDelete(selected)"
                   />
@@ -97,7 +97,7 @@
                     dense
                     flat
                     size="sm"
-                    :title="$t('previous')"
+                    :title="t('previous')"
                     icon="arrow_back_ios"
                     class="on-right"
                     :disable="selected === 0"
@@ -109,7 +109,7 @@
                     dense
                     flat
                     size="sm"
-                    :title="$t('next')"
+                    :title="t('next')"
                     icon="arrow_forward_ios"
                     class="q-ml-xs"
                     :disable="selected === campaigns.length - 1"
@@ -126,7 +126,7 @@
       <div v-else>
         <q-card class="bg-negative text-white">
           <q-card-section>
-            {{ $t('user.not_admin') }}
+            {{ t('user.not_admin') }}
           </q-card-section>
         </q-card>
       </div>
@@ -135,17 +135,17 @@
     <q-dialog v-model="showReload">
       <q-card style="width: 500px; max-width: 90hw;">
         <q-card-section>
-          {{ $t('reload_confirmation') }}
+          {{ t('reload_confirmation') }}
         </q-card-section>
         <q-card-actions align="right">
           <q-btn
             flat
-            :label="$t('cancel')"
+            :label="t('cancel')"
             color="secondary"
             v-close-popup
           />
           <q-btn
-            :label="$t('reload')"
+            :label="t('reload')"
             color="primary"
             v-close-popup
             @click="onReloadConfirmed"
@@ -160,6 +160,7 @@
 import CampaignForm from 'src/components/admin/CampaignForm.vue';
 import { notifyError } from 'src/utils/notify';
 
+const { t } = useI18n();
 const authStore = useAuthStore();
 const mapStore = useMapStore();
 const adminStore = useAdminStore();

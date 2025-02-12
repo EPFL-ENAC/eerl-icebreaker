@@ -16,7 +16,7 @@
         :class="split === 100 ? 'bg-red-2' : ''"
         size="12px"
         icon="north"
-        :label="$t('fly_to_arctic')"
+        :label="t('fly_to_arctic')"
         @click="split === 100 ? split = 50 : split = 100"
         align="left"
       />
@@ -28,7 +28,7 @@
         :class="split === 0 ? 'bg-red-2' : ''"
         size="12px"
         icon="south"
-        :label="$t('fly_to_antarctic')"
+        :label="t('fly_to_antarctic')"
         @click="split === 0 ? split = 50 : split = 0"
         align="left"
       />
@@ -60,6 +60,7 @@ export default defineComponent({
 <script setup lang="ts">
 import AzimuthView from 'src/components/map/AzimuthView.vue';
 
+const { t } = useI18n();
 const route = useRoute();
 
 const split = ref(50);

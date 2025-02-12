@@ -33,7 +33,7 @@
             "
             class="text-weight-thin"
           >
-            {{ $t('app_title') }}
+            {{ t('app_title') }}
           </div>
           <div
             :class="
@@ -45,7 +45,7 @@
             "
             class="text-black"
           >
-            {{ $t('app_subtitle') }}
+            {{ t('app_subtitle') }}
           </div>
         </div>
         <div class="col"></div>
@@ -60,9 +60,11 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-interface AppHeaderProps {
+const { t } = useI18n();
+
+interface Props {
   url: string;
 }
 
-defineProps<AppHeaderProps>();
+defineProps<Props>();
 </script>

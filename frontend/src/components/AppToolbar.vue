@@ -12,28 +12,28 @@
     <a href="https://epfl.ch" target="_blank" class="q-mt-sm">
       <img src="EPFL_logo.png" style="height: 25px" />
     </a>
-    <span class="q-ml-md text-h6">{{ $t('app_title') }}</span>
+    <span class="q-ml-md text-h6">{{ t('app_title') }}</span>
     <q-space />
     <span v-if="!$q.screen.lt.md">
       <q-btn
         flat
         round
         icon="menu_book"
-        :title="$t('resources')"
+        :title="t('resources')"
         @click="showResources = true"
       ></q-btn>
       <q-btn
         flat
         round
         icon="info"
-        :title="$t('introduction')"
+        :title="t('introduction')"
         @click="showIntro = true"
       ></q-btn>
       <q-btn
         flat
         round
         icon="settings"
-        :title="$t('administration')"
+        :title="t('administration')"
         :to="'/admin'"
         class="on-left"
       ></q-btn>
@@ -43,17 +43,17 @@
         <q-list class="bg-white">
           <q-item clickable v-close-popup :to="'/admin'">
             <q-item-section>
-              <q-item-label>{{ $t('administration') }}</q-item-label>
+              <q-item-label>{{ t('administration') }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="showResources = true">
             <q-item-section>
-              <q-item-label>{{ $t('resources') }}</q-item-label>
+              <q-item-label>{{ t('resources') }}</q-item-label>
             </q-item-section>
           </q-item>
           <q-item clickable v-close-popup @click="showIntro = true">
             <q-item-section>
-              <q-item-label>{{ $t('introduction') }}</q-item-label>
+              <q-item-label>{{ t('introduction') }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -66,11 +66,11 @@
 
   <simple-dialog
     v-model="showIntro"
-    :title="$t('app_title')"
+    :title="t('app_title')"
     :content="IntroductionMd"
   />
 
-  <simple-dialog v-model="showResources" :title="$t('resources')">
+  <simple-dialog v-model="showResources" :title="t('resources')">
     <q-list separator>
       <essential-link
         v-for="link in essentialLinks"
@@ -93,6 +93,8 @@ import essentialLinks from 'src/assets/links.json';
 import EssentialLink from 'src/components/EssentialLink.vue';
 import SimpleDialog from 'src/components/SimpleDialog.vue';
 import { Settings } from 'src/stores/settings';
+
+const { t } = useI18n();
 
 interface Props {
   noMenu?: boolean;

@@ -15,10 +15,10 @@
       active-bg-color="light-blue-1"
       indicator-color="secondary"
       align="justify">
-      <q-tab name="info" :label="$t('info')" />
-      <q-tab name="references" :label="$t('references')" />
-      <q-tab name="instruments" :label="$t('instrument_measures')" />
-      <q-tab name="fundings" :label="$t('funding')" />
+      <q-tab name="info" :label="t('info')" />
+      <q-tab name="references" :label="t('references')" />
+      <q-tab name="instruments" :label="t('instrument_measures')" />
+      <q-tab name="fundings" :label="t('funding')" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab" animated>
@@ -53,7 +53,7 @@
         <q-list separator>
           <q-item>
             <q-item-section>
-              <q-item-label overline>{{ $t('dates') }}</q-item-label>
+              <q-item-label overline>{{ t('dates') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
@@ -63,7 +63,7 @@
           </q-item>
           <q-item>
             <q-item-section>
-              <q-item-label overline>{{ $t('location') }}</q-item-label>
+              <q-item-label overline>{{ t('location') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
@@ -84,7 +84,7 @@
           </q-item>
           <q-item v-if="campaign.track">
             <q-item-section>
-              <q-item-label overline>{{ $t('track') }}</q-item-label>
+              <q-item-label overline>{{ t('track') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
@@ -176,6 +176,8 @@ export default defineComponent({
 import { Campaign } from 'src/models';
 import { cdnUrl } from 'src/boot/api';
 import { formatCoordinates } from 'src/utils/numbers';
+
+const { t } = useI18n();
 
 interface Props {
   campaign: Campaign;

@@ -8,7 +8,7 @@
         <q-select
           v-model="mapStore.tileLayer"
           :options="tileLayers"
-          :label="$t('base_map')"
+          :label="t('base_map')"
           dense
           outlined
           map-options
@@ -26,6 +26,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
+const { t } = useI18n();
 const mapStore = useMapStore();
 
 const tileLayers = [

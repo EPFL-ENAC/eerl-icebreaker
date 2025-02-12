@@ -15,7 +15,7 @@
         color="primary"
         size="12px"
         icon="north"
-        :label="$t('fly_to_arctic')"
+        :label="t('fly_to_arctic')"
         @click="flyTo([90, 0])"
         align="left"
       />
@@ -26,7 +26,7 @@
         color="primary"
         size="12px"
         icon="south"
-        :label="$t('fly_to_antarctic')"
+        :label="t('fly_to_antarctic')"
         @click="flyTo([-90, 0])"
         align="left"
       />
@@ -46,6 +46,7 @@ import 'cesium/Build/Cesium/Widgets/widgets.css';
 import { Campaign } from 'src/models';
 import { CsvLine } from '../models';
 
+const { t } = useI18n();
 const mapStore = useMapStore();
 
 const globe = ref<Viewer | null>(null);
