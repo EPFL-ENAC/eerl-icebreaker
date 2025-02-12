@@ -14,11 +14,11 @@
       active-color="secondary"
       active-bg-color="light-blue-1"
       indicator-color="secondary"
-      align="justify">
+      :align="tabAlignment">
       <q-tab name="info" :label="t('info')" />
-      <q-tab name="references" :label="t('references')" />
-      <q-tab name="instruments" :label="t('instrument_measures')" />
-      <q-tab name="fundings" :label="t('funding')" />
+      <q-tab v-if="campaign.references?.length" name="references" :label="t('references')" />
+      <q-tab v-if="campaign.instruments?.length" name="instruments" :label="t('instrument_measures')" />
+      <q-tab v-if="campaign.fundings?.length" name="fundings" :label="t('funding')" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab" animated>
@@ -186,6 +186,13 @@ const props = defineProps<Props>();
 
 const tab = ref('info');
 const slide = ref(1);
+
+const tabAlignment = computed(() => {
+  if (props.campaign.references?.length || props.campaign.instruments?.length || props.campaign.fundings?.length) {
+    return 'justify';
+  }
+  return 'left';
+});
 
 const imageUrls = computed(() => {
   return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}/${image.path}`) : [];
