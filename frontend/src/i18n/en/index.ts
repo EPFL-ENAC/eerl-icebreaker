@@ -34,7 +34,7 @@ export default {
   grant_number: 'Grant number',
   home: 'Home',
   images: 'Images',
-  instrument_measures: 'Instruments & Measures',
+  instrument_measures: 'Instruments & Measurements',
   introduction: 'Introduction',
   it4r_contrib: 'UI/UX design, application development and deployment',
   latitude_col_name: 'Latitude column name',
