@@ -24,7 +24,7 @@ import { Campaign } from 'src/models';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Select from 'ol/interaction/Select';
-import { FullScreen, Attribution } from 'ol/control';
+import { Attribution } from 'ol/control';
 import { CsvLine } from 'src/components/models';
 
 interface Props {
@@ -88,7 +88,7 @@ const attributions =
     })
   });
   map.value = new Map({
-    controls: [new FullScreen(), new Attribution()],
+    controls: [new Attribution()],
     target: props.id,
     layers: [
       arcgisWorldImageryLayer,

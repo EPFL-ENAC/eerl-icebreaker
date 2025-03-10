@@ -32,6 +32,16 @@
         @click="split === 0 ? split = 50 : split = 0"
         align="left"
       />
+      <q-btn
+        flat
+        no-caps
+        square
+        color="primary"
+        size="12px"
+        @click="$q.fullscreen.toggle()"
+        :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+        align="left"
+      />
     </div>
     <q-splitter
       v-model="split"
@@ -65,5 +75,4 @@ const route = useRoute();
 
 const split = ref(50);
 const isEmbeded = computed(() => route.query.embed !== undefined && route.query.embed !== 'false' && route.query.embed !== '0');
-
 </script>

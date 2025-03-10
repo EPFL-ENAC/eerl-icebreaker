@@ -30,6 +30,16 @@
         @click="flyTo([-90, 0])"
         align="left"
       />
+      <q-btn
+        flat
+        no-caps
+        square
+        color="primary"
+        size="12px"
+        @click="$q.fullscreen.toggle()"
+        :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
+        align="left"
+      />
     </div>
     <div id="globe" />
   </div>
