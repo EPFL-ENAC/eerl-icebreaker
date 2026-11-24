@@ -7,8 +7,8 @@ class Config(BaseSettings):
     PATH_PREFIX: str = "/api"
 
     # Keycloak
-    KEYCLOAK_REALM: str = "EERL"
-    KEYCLOAK_URL: str = "https://enac-it-sso.epfl.ch"
+    KEYCLOAK_REALM: str = "EPFL_inside"
+    KEYCLOAK_URL: str = "https://enac-it-sso2.epfl.ch"
     KEYCLOAK_API_ID: str
     KEYCLOAK_API_SECRET: str
 

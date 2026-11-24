@@ -26,7 +26,8 @@ export default defineConfig((ctx) => {
       defineEnv: {
         API_URL: ctx.dev ? 'http://localhost:8000' : process.env.API_URL,
         API_PATH: ctx.dev ? '' : process.env.API_PATH,
-        AUTH_CLIENT_ID: ctx.dev ? 'local-ui' : process.env.AUTH_CLIENT_ID,
+        AUTH_CLIENT_ID: ctx.dev ? 'icebreaker-local-ui' : process.env.AUTH_CLIENT_ID,
+        AUTH_API_CLIENT_ID: ctx.dev ? 'icebreaker-local-api' : process.env.AUTH_API_CLIENT_ID,
       },
 
       // Needed to have relative assets in the index.html

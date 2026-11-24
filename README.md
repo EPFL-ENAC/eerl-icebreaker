@@ -8,7 +8,7 @@ Management of polar campaigns.
 
 Connects to S3 (at EPFL) to store polar campaigns description and data files.
 
-Connects to Keycloak (at ENAC IT) to validate users authentication.
+Connects to Keycloak (enac-it-sso2, realm EPFL_inside) to validate users authentication. The `icebreaker-admin` role is a client role of the API client.
 
 ## frontend
 

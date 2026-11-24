@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { keycloak } from '@/boot/api';
+import { authApiClientId, keycloak } from '@/boot/api';
 
 export interface Profile {
   id: string;
@@ -12,20 +12,20 @@ export interface Profile {
 export const useAuthStore = defineStore('auth', () => {
 
   const profile = ref<Profile>();
-  const realmRoles = ref<string[]>([]);
+  const roles = ref<string[]>([]);
   const isAuthenticated = computed(() => profile.value !== undefined);
-  const isAdmin = computed(() => realmRoles.value.includes('icebreaker-admin'));
+  const isAdmin = computed(() => roles.value.includes('icebreaker-admin'));
   const accessToken = computed(() => keycloak.token);
 
   async function init() {
     if (isAuthenticated.value) return Promise.resolve(true);
     profile.value = undefined;
-    realmRoles.value = [];
+    roles.value = [];
     return keycloak.init({
       onLoad: 'check-sso' // Optional: 'login-required' forces login right away, 'check-sso' checks if the user is already logged in.
     }).then((authenticated: boolean) => {
       if (authenticated) {
-        realmRoles.value = keycloak.tokenParsed.realm_access.roles
+        roles.value = keycloak.tokenParsed?.resource_access?.[authApiClientId]?.roles || [];
         return keycloak.loadUserProfile().then((prof: Profile) => {
           profile.value = prof;
           return authenticated;
@@ -48,7 +48,7 @@ export const useAuthStore = defineStore('auth', () => {
       redirectUri: window.location.origin,
     }).then(() => {
       profile.value = undefined;
-      realmRoles.value = [];
+      roles.value = [];
     });
   }
 
@@ -64,7 +64,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isAdmin,
     profile,
-    realmRoles,
+    roles,
     accessToken,
     init,
     login,
