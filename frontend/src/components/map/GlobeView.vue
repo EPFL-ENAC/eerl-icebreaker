@@ -11,21 +11,33 @@
       <q-btn
         flat
         no-caps
+        square
         color="primary"
         size="12px"
         icon="north"
-        :label="$t('fly_to_arctic')"
+        :label="t('fly_to_arctic')"
         @click="flyTo([90, 0])"
         align="left"
       />
       <q-btn
         flat
         no-caps
+        square
         color="primary"
         size="12px"
         icon="south"
-        :label="$t('fly_to_antarctic')"
+        :label="t('fly_to_antarctic')"
         @click="flyTo([-90, 0])"
+        align="left"
+      />
+      <q-btn
+        flat
+        no-caps
+        square
+        color="primary"
+        size="12px"
+        @click="$q.fullscreen.toggle()"
+        :icon="$q.fullscreen.isActive ? 'fullscreen_exit' : 'fullscreen'"
         align="left"
       />
     </div>
@@ -41,18 +53,20 @@ export default defineComponent({
 <script setup lang="ts">
 import { LabelStyle, Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined, HorizontalOrigin, Cartesian2 } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import { Campaign } from 'src/models';
+import { Campaign } from '@/models';
 import { CsvLine } from '../models';
 
+const { t } = useI18n();
 const mapStore = useMapStore();
 
 const globe = ref<Viewer | null>(null);
 
 onMounted(() => {
-  initialize('globe');
-  if (mapStore.campaignsLoaded) {
-    mapStore.campaigns.forEach((exp: Campaign) => initCampaign(exp)); 
-  }
+  initialize('globe').then(() => {
+    if (mapStore.campaignsLoaded) {
+      mapStore.campaigns.forEach((exp: Campaign) => initCampaign(exp)); 
+    }
+  });
 });
 
 watch(
@@ -74,7 +88,8 @@ watch(
   },
 );
 
-function initialize(id: string) {
+async function initialize(id: string) {
+  await mapStore.loadCesiumAccessToken();
   globe.value = new Viewer(id, {
     animation: false,
     baseLayerPicker: true,
@@ -92,7 +107,9 @@ function initialize(id: string) {
     //skyBox: false,
     //skyAtmosphere: false,
     vrButton: false,
+    creditContainer: document.createElement('div'),  // Empty div to remove default credits
   });
+
   flyTo([90, 0], 0);
 }
 
@@ -110,6 +127,9 @@ function initCampaign(campaign: Campaign) {
     },
   });
 
+  const offsetX = typeof campaign.offsetX === 'number' ? campaign.offsetX : 0;
+  const offsetY = typeof campaign.offsetY === 'number' ? campaign.offsetY : -15;
+
   globe.value.entities.add({
     position: Cartesian3.fromDegrees(start[1], start[0]),
     label: {
@@ -118,7 +138,7 @@ function initCampaign(campaign: Campaign) {
       outlineWidth: 2,
       font: '20px sans-serif',
       horizontalOrigin: HorizontalOrigin.CENTER,
-      pixelOffset: new Cartesian2(0.0, -20),
+      pixelOffset: new Cartesian2(offsetX, offsetY),
       style: LabelStyle.FILL_AND_OUTLINE,
     },
   });

@@ -1,5 +1,5 @@
 <template>
-  <div :style="`background-color: ${isSouthPole ? '#f2efe9' : '#aad3df'};`">
+  <div :style="`background-color: ${isSouthPole ? '#ffffff' : '#004255'};`">
     <div :id="id" :style="`height: ${embed ? 100 : 94}vh;`"></div>
   </div>
 </template>
@@ -15,16 +15,17 @@ import 'ol/ol.css';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
-import OSM from 'ol/source/OSM';
+import { XYZ } from 'ol/source';
 import { fromLonLat, get } from 'ol/proj';
 import { Feature } from 'ol';
 import { Point, LineString } from 'ol/geom';
 import { Style, Circle, Fill, Stroke, Text } from 'ol/style';
-import { Campaign } from 'src/models';
+import { Campaign } from '@/models';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Select from 'ol/interaction/Select';
-import { CsvLine } from 'src/components/models';
+import { Attribution } from 'ol/control';
+import { CsvLine } from '@/components/models';
 
 interface Props {
   id: string;
@@ -68,23 +69,33 @@ watch(
   },
 );
 
-function initialize() {
+async function initialize() {
   selectInteractions.value = [];
   const stereographicPole = get(props.projection);
   if (!stereographicPole) {
     console.error('Projection not found');
     return;
   }
+
+const attributions =
+  '<a href="https://esri.maps.arcgis.com/home" target="_blank">&copy; Esri World Imagery</a> ' +
+  '<a href="https://www.epfl.ch/labs/eerl/" target="_blank">&copy; EPFL - EERL</a>';
+  const arcgisWorldImageryLayer = new TileLayer({
+    source: new XYZ({
+      attributions: attributions,
+      url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+      maxZoom: 16 // ArcGIS World Imagery max zoom level
+    })
+  });
   map.value = new Map({
+    controls: [new Attribution()],
     target: props.id,
     layers: [
-      new TileLayer({
-        source: new OSM(),
-      }),
+      arcgisWorldImageryLayer,
     ],
     view: new View({
       center: fromLonLat(isSouthPole.value ? [0, -90] : [0, 90], stereographicPole),
-      zoom: 4,
+      zoom: isSouthPole.value ? 3 : 4,
       projection: props.projection,
     }),
   });
@@ -158,11 +169,12 @@ function addFeatureLayer(campaign: Campaign, features: [Feature]) {
       }),
       // Style for the label
       text: new Text({
-        font: '12px Calibri,sans-serif',
+        font: '16px Calibri,sans-serif',
         fill: new Fill({ color: '#000' }), // Text color
         stroke: new Stroke({ color: '#fff', width: 2 }), // Outline around text
         text: feature.get('name'), // Get the label text from the 'name' property
-        offsetY: -15 // Offset to position the label above the point
+        offsetY: typeof campaign.offsetY === 'number' ? campaign.offsetY : -15, // Offset to position the label above/beneath the point
+        offsetX: typeof campaign.offsetX === 'number' ? campaign.offsetX : 0, // Offset to position the label aside the point
       }),
       stroke: new Stroke({
         color: campaign.track?.color ? campaign.track.color : 'orange',

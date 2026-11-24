@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import { keycloak } from 'src/boot/api';
+import { keycloak } from '@/boot/api';
 
 export interface Profile {
   id: string;

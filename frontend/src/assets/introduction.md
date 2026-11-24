@@ -1,3 +1,6 @@
-Beatae cupiditate modi quia dolor facilis dolor. Accusantium ut dolorum laboriosam ratione tenetur et. Aspernatur ut aliquid aut dolorem eaque quasi voluptatem quia. Sit nemo asperiores qui. Et molestias velit quisquam natus eveniet unde vel. Laudantium nam quia magnam ad error magnam.
+The **Extreme Environments Research Laboratory** (EERL) aims to create understanding of aerosol processes in polar and mountain environments and therefore performs observations in the field.
 
-In error sunt ut. Id voluptas et sint enim. Inventore vel qui dolorem aut autem eligendi. Ipsa explicabo accusamus impedit et et. Exercitationem assumenda voluptate fuga eum doloremque.
+This website provides an overview of past campaigns and their scientific purposes. By clicking on a specific campaign, a pop-up window will provide information on the types of measurements and links to papers and data sets.
+
+For questions or access to not-yet-published data sets please contact: [Julia Schmale @ EPFL](https://people.epfl.ch/julia.schmale)
+ 

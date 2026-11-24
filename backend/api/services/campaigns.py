@@ -6,24 +6,36 @@ import urllib.parse
 from api.services.s3 import s3_client
 from api.config import config
 from api.models.campaigns import Campaign
+from api.cache import redis
+
+CAMPAIGNS_CACHE_KEY = "campaigns.json"
 
 
 class CampaignsService:
-  
+
     async def list(self) -> list[Campaign]:
         """List all campaigns"""
-        folder_path = "campaigns/"
-        files = [file for file in await s3_client.list_files(folder_path) if file.endswith("/campaign.json")]
-
         campaigns = []
-        for file in files:
-            content, mime_type = await s3_client.get_file(file)
-            campaign_dict = json.loads(content)
-            campaign = Campaign(**campaign_dict)
-            campaigns.append(campaign)
+        content = await redis.get(CAMPAIGNS_CACHE_KEY)
+        if content is None:
+            folder_path = "campaigns/"
+            files = [file for file in await s3_client.list_files(folder_path) if file.endswith("/campaign.json")]
+
+            campaigns = []
+            for file in files:
+                content, mime_type = await s3_client.get_file(file)
+                campaign_dict = json.loads(content)
+                campaign = Campaign(**campaign_dict)
+                campaigns.append(campaign)
+
+            await redis.set(CAMPAIGNS_CACHE_KEY, json.dumps(
+                [campaign.model_dump() for campaign in campaigns]), ex=config.CACHE_SOURCE_EXPIRY)
+        else:
+            campaigns = [Campaign(**campaign_dict)
+                         for campaign_dict in json.loads(content)]
 
         return campaigns
-  
+
     async def delete(self, identifier: str):
         exists = await self.exists(identifier)
         if not exists:
@@ -34,8 +46,9 @@ class CampaignsService:
 
     async def exists(self, identifier: str) -> bool:
         return await s3_client.path_exists(f"campaigns/{identifier}/campaign.json")
-    
+
     async def createOrUpdate(self, campaign: Campaign) -> Campaign:
+        await redis.flushall()
         if campaign.id is None or campaign.id == "" or campaign.id == "_draft":
             campaign.id = str(uuid.uuid4())
 
@@ -78,7 +91,6 @@ class CampaignsService:
             await s3_client.upload_local_file(temp_dir, "campaign.json", s3_folder=s3_folder)
 
         return campaign
-
 
     async def get(self, identifier: str) -> Campaign:
         exists = await self.exists(identifier)

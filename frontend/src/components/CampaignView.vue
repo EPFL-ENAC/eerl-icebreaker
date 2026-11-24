@@ -14,11 +14,11 @@
       active-color="secondary"
       active-bg-color="light-blue-1"
       indicator-color="secondary"
-      align="justify">
-      <q-tab name="info" :label="$t('info')" />
-      <q-tab name="references" :label="$t('references')" />
-      <q-tab name="instruments" :label="$t('instrument_measures')" />
-      <q-tab name="fundings" :label="$t('fundings')" />
+      :align="tabAlignment">
+      <q-tab name="info" :label="t('info')" />
+      <q-tab v-if="campaign.references?.length" name="references" :label="t('references')" />
+      <q-tab v-if="campaign.instruments?.length" name="instruments" :label="t('instrument_measures')" />
+      <q-tab v-if="campaign.fundings?.length" name="fundings" :label="t('funding')" />
     </q-tabs>
     <q-separator />
     <q-tab-panels v-model="tab" animated>
@@ -53,7 +53,7 @@
         <q-list separator>
           <q-item>
             <q-item-section>
-              <q-item-label overline>{{ $t('dates') }}</q-item-label>
+              <q-item-label overline>{{ t('dates') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
@@ -63,7 +63,7 @@
           </q-item>
           <q-item>
             <q-item-section>
-              <q-item-label overline>{{ $t('location') }}</q-item-label>
+              <q-item-label overline>{{ t('location') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
@@ -84,7 +84,7 @@
           </q-item>
           <q-item v-if="campaign.track">
             <q-item-section>
-              <q-item-label overline>{{ $t('track') }}</q-item-label>
+              <q-item-label overline>{{ t('track') }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <q-item-label>
@@ -102,6 +102,7 @@
           <q-item v-for="reference in campaign.references" :key="reference.doi">
             <q-item-section>
               <q-item-label overline>{{ reference.citation }}</q-item-label>
+              <q-item-label class="text-help">{{ reference.title }}</q-item-label>
             </q-item-section>
             <q-item-section>
               <a :href="`https://doi.org/${reference.doi}`" target="_blank" class="epfl">
@@ -172,9 +173,11 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { Campaign } from 'src/models';
-import { cdnUrl } from 'src/boot/api';
-import { formatCoordinates } from 'src/utils/numbers';
+import { Campaign } from '@/models';
+import { cdnUrl } from '@/boot/api';
+import { formatCoordinates } from '@/utils/numbers';
+
+const { t } = useI18n();
 
 interface Props {
   campaign: Campaign;
@@ -183,6 +186,13 @@ const props = defineProps<Props>();
 
 const tab = ref('info');
 const slide = ref(1);
+
+const tabAlignment = computed(() => {
+  if (props.campaign.references?.length || props.campaign.instruments?.length || props.campaign.fundings?.length) {
+    return 'justify';
+  }
+  return 'left';
+});
 
 const imageUrls = computed(() => {
   return props.campaign.images ? props.campaign.images.map((image) => `${cdnUrl}/${image.path}`) : [];
@@ -201,9 +211,10 @@ const hasEndLocation = computed(() => {
 });
 
 function truncateString(str: string, num: number) {
-  if (str.length <= num) {
-    return str;
+  let newstr = str.replace('https://', '');
+  if (newstr.length <= num) {
+    return newstr;
   }
-  return str.slice(0, num) + '...';
+  return newstr.slice(0, num) + '...';
 }
 </script>

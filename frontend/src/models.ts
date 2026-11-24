@@ -9,6 +9,7 @@ export interface FileRef {
 
 export interface Reference {
   citation: string;
+  title?: string;
   doi: string;
 }
 
@@ -60,6 +61,8 @@ export interface Campaign {
   fundings: Funding[];
   references: Reference[];
   instruments: Instrument[];
+  offsetX?: number;
+  offsetY?: number;
 }
 
 export interface CampaignStore {

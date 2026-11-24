@@ -5,9 +5,9 @@
     </q-item-section>
 
     <q-item-section>
-      <q-item-label>{{ $t(title) }}</q-item-label>
-      <q-item-label caption>{{ $t(caption) }}</q-item-label>
-      <q-item-label v-if="contribution">{{ $t(contribution) }}</q-item-label>
+      <q-item-label>{{ t(title) }}</q-item-label>
+      <q-item-label caption>{{ t(caption) }}</q-item-label>
+      <q-item-label v-if="contribution">{{ t(contribution) }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
@@ -30,4 +30,5 @@ withDefaults(defineProps<EssentialLinkProps>(), {
   link: '#',
   icon: '',
 });
+const { t } = useI18n();
 </script>
