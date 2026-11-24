@@ -36,12 +36,12 @@
 </template>
 
 <script setup lang="ts">
-import SimpleDialog from 'src/components/SimpleDialog.vue';
-import CampaignView from 'src/components/CampaignView.vue';
-import GlobeView from 'src/components/map/GlobeView.vue';
-import AzimuthViews from 'src/components/map/AzimuthViews.vue';
+import SimpleDialog from '@/components/SimpleDialog.vue';
+import CampaignView from '@/components/CampaignView.vue';
+import GlobeView from '@/components/map/GlobeView.vue';
+import AzimuthViews from '@/components/map/AzimuthViews.vue';
 
-import { Settings } from 'src/stores/settings';
+import { Settings } from '@/stores/settings';
 
 const route = useRoute();
 const router = useRouter();

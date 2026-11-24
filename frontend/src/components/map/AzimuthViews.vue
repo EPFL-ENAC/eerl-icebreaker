@@ -68,7 +68,7 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import AzimuthView from 'src/components/map/AzimuthView.vue';
+import AzimuthView from '@/components/map/AzimuthView.vue';
 
 const { t } = useI18n();
 const route = useRoute();
