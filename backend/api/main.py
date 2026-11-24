@@ -1,19 +1,17 @@
-import os
-from fastapi import FastAPI, status
-from fastapi.middleware.cors import CORSMiddleware
-
-
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from logging import INFO, basicConfig
+
+from fastapi import FastAPI, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi_cache import FastAPICache
 from fastapi_cache.backends.redis import RedisBackend
-
-from api.config import config
-from api.cache import redis
-from logging import basicConfig, INFO
 from pydantic import BaseModel
-from api.views.files import router as files_router
+
+from api.cache import redis
+from api.config import config
 from api.views.campaigns import router as campaigns_router
+from api.views.files import router as files_router
 from api.views.settings import router as settings_router
 
 basicConfig(level=INFO)
@@ -23,6 +21,7 @@ basicConfig(level=INFO)
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     FastAPICache.init(RedisBackend(redis), prefix="ib-cache")
     yield
+
 
 app = FastAPI(root_path=config.PATH_PREFIX, lifespan=lifespan)
 
@@ -39,6 +38,7 @@ app.add_middleware(
 
 class HealthCheck(BaseModel):
     """Response model to validate and return when performing a health check."""
+
     status: str = "OK"
 
 
@@ -50,9 +50,9 @@ class HealthCheck(BaseModel):
     status_code=status.HTTP_200_OK,
     response_model=HealthCheck,
 )
-async def get_health(
-) -> HealthCheck:
+async def get_health() -> HealthCheck:
     return HealthCheck(status="OK")
+
 
 app.include_router(
     files_router,

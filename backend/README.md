@@ -2,8 +2,8 @@
 Based loosely on https://github.com/gauravgola96/FastAPI-Example
 
 ## Requirements
-- python 3.10.9
-- poetry
+- python 3.11
+- [uv](https://docs.astral.sh/uv/)
 - Make
 - Docker with docker compose
 - OS:
@@ -24,6 +24,12 @@ cp ../.env.example ../.env
 Run Locally
 ```
 make install; make run
+```
+
+Lint and format (ruff)
+```
+make lint    # check
+make format  # fix
 ```
 
 Swagger docs

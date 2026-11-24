@@ -1,10 +1,9 @@
-from pydantic import model_validator
-from pydantic_settings import BaseSettings
 from functools import lru_cache
+
+from pydantic_settings import BaseSettings
 
 
 class Config(BaseSettings):
-
     PATH_PREFIX: str = "/api"
 
     # Keycloak
@@ -28,7 +27,7 @@ class Config(BaseSettings):
     MAP_API_KEY: str
 
 
-@lru_cache()
+@lru_cache
 def get_config():
     return Config()
 

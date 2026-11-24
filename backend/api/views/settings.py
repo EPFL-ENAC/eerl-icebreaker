@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from api.config import config
 from api.models.settings import Settings
 

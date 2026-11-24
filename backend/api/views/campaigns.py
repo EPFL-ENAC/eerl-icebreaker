@@ -1,28 +1,28 @@
-from typing import List
 from fastapi import APIRouter, Depends
 from fastapi.responses import Response
 from fastapi_cache.decorator import cache
-from api.services.campaigns import CampaignsService
-from api.models.campaigns import Campaign
-from api.auth import kc_service, User
+
+from api.auth import User, kc_service
 from api.config import config
+from api.models.campaigns import Campaign
+from api.services.campaigns import CampaignsService
 
 router = APIRouter()
 
 
-@router.get("/campaigns", response_model=List[Campaign])
+@router.get("/campaigns", response_model=list[Campaign])
 @cache(expire=config.CACHE_API_EXPIRY)
 async def get_campaigns(
     # user: User = Depends(require_admin),
-) -> List[Campaign]:
+) -> list[Campaign]:
     """Get all campaigns"""
     service = CampaignsService()
     return await service.list()
 
 
-@router.post("/campaigns", status_code=201, response_model=List[Campaign])
+@router.post("/campaigns", status_code=201, response_model=list[Campaign])
 async def create_or_update_campaigns(
-    campaigns: List[Campaign],
+    campaigns: list[Campaign],
     user: User = Depends(kc_service.require_admin()),
 ):
     """Create or update campaigns, move temporary files to there final location"""
@@ -42,11 +42,11 @@ async def get_campaign(
     return await service.get(identifier)
 
 
-@router.delete("/campaign/{identifier}", response_model=List[Campaign])
+@router.delete("/campaign/{identifier}", response_model=list[Campaign])
 async def delete_campaign(
     identifier: str,
     user: User = Depends(kc_service.require_admin()),
-) -> List[Campaign]:
+) -> list[Campaign]:
     """Delete a campaign and associated files"""
     service = CampaignsService()
     return await service.delete(identifier)

@@ -1,25 +1,29 @@
-import os
-import uuid
 import json
+import os
 import tempfile
 import urllib.parse
-from api.services.s3 import s3_client
+import uuid
+
+from api.cache import redis
 from api.config import config
 from api.models.campaigns import Campaign
-from api.cache import redis
+from api.services.s3 import s3_client
 
 CAMPAIGNS_CACHE_KEY = "campaigns.json"
 
 
 class CampaignsService:
-
     async def list(self) -> list[Campaign]:
         """List all campaigns"""
         campaigns = []
         content = await redis.get(CAMPAIGNS_CACHE_KEY)
         if content is None:
             folder_path = "campaigns/"
-            files = [file for file in await s3_client.list_files(folder_path) if file.endswith("/campaign.json")]
+            files = [
+                file
+                for file in await s3_client.list_files(folder_path)
+                if file.endswith("/campaign.json")
+            ]
 
             campaigns = []
             for file in files:
@@ -28,19 +32,20 @@ class CampaignsService:
                 campaign = Campaign(**campaign_dict)
                 campaigns.append(campaign)
 
-            await redis.set(CAMPAIGNS_CACHE_KEY, json.dumps(
-                [campaign.model_dump() for campaign in campaigns]), ex=config.CACHE_SOURCE_EXPIRY)
+            await redis.set(
+                CAMPAIGNS_CACHE_KEY,
+                json.dumps([campaign.model_dump() for campaign in campaigns]),
+                ex=config.CACHE_SOURCE_EXPIRY,
+            )
         else:
-            campaigns = [Campaign(**campaign_dict)
-                         for campaign_dict in json.loads(content)]
+            campaigns = [Campaign(**campaign_dict) for campaign_dict in json.loads(content)]
 
         return campaigns
 
     async def delete(self, identifier: str):
         exists = await self.exists(identifier)
         if not exists:
-            raise Exception(
-                f"Campaign with identifier {identifier} does not exist.")
+            raise Exception(f"Campaign with identifier {identifier} does not exist.")
 
         await s3_client.delete_files(f"campaigns/{identifier}")
 
@@ -67,7 +72,9 @@ class CampaignsService:
                     file.path = urllib.parse.quote(new_key)
                     if file.alt_path is not None:
                         new_name = f"{i + 1}-{file.alt_name}"
-                        new_key = await s3_client.move_file(file.alt_path, f"{s3_folder}/{new_name}")
+                        new_key = await s3_client.move_file(
+                            file.alt_path, f"{s3_folder}/{new_name}"
+                        )
                         file.alt_name = new_name
                         file.alt_path = urllib.parse.quote(new_key)
         # Track
@@ -95,8 +102,7 @@ class CampaignsService:
     async def get(self, identifier: str) -> Campaign:
         exists = await self.exists(identifier)
         if not exists:
-            raise Exception(
-                f"Campaign with identifier {identifier} does not exist.")
+            raise Exception(f"Campaign with identifier {identifier} does not exist.")
 
         file_path = f"campaigns/{identifier}/campaign.json"
         content, mime_type = await s3_client.get_file(file_path)

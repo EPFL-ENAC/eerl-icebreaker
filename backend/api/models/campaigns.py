@@ -1,67 +1,66 @@
-from typing import List, Optional, Tuple
-from pydantic import BaseModel
 from enacit4r_files.models.files import FileRef
+from pydantic import BaseModel
 
 
 class Reference(BaseModel):
     citation: str
-    title: Optional[str] = None
+    title: str | None = None
     doi: str
 
 
 class Measures(BaseModel):
     name: str
-    description: Optional[str] = None
-    datasets: Optional[List[str]] = None
+    description: str | None = None
+    datasets: list[str] | None = None
 
 
 class Instrument(BaseModel):
     name: str
-    description: Optional[str] = None
-    measures: Optional[List[Measures]]
+    description: str | None = None
+    measures: list[Measures] | None
 
 
 class TrackColumns(BaseModel):
     latitude: str
     longitude: str
-    timestamp: Optional[str] = None
+    timestamp: str | None = None
 
 
 class Track(BaseModel):
     file: FileRef
     columns: TrackColumns
-    color: Optional[str] = None
-    timestamp_format: Optional[str]
+    color: str | None = None
+    timestamp_format: str | None
 
 
 class Funding(BaseModel):
     name: str
-    grant: Optional[str] = None
-    website: Optional[str] = None
+    grant: str | None = None
+    website: str | None = None
 
 
 class Campaign(BaseModel):
-    id: Optional[int] = None
+    id: int | None = None
     name: str
     acronym: str
-    website: Optional[str] = None
-    type: Optional[str] = None
-    color: Optional[str] = None
-    objectives: Optional[str] = None
-    start_date: Optional[str] = None
-    end_date: Optional[str] = None
-    location: Optional[str] = None
-    platform: Optional[str] = None
-    start_location: Tuple[float, float]
-    end_location: Optional[Tuple[float, float]] = None
-    images: Optional[List[FileRef]] = None
-    track: Optional[Track] = None
-    fundings: Optional[List[Funding]] = None
-    references: Optional[List[Reference]] = None
-    instruments: Optional[List[Instrument]] = None
-    offsetX: Optional[float] = None
-    offsetY: Optional[float] = None
+    website: str | None = None
+    type: str | None = None
+    color: str | None = None
+    objectives: str | None = None
+    start_date: str | None = None
+    end_date: str | None = None
+    location: str | None = None
+    platform: str | None = None
+    start_location: tuple[float, float]
+    end_location: tuple[float, float] | None = None
+    images: list[FileRef] | None = None
+    track: Track | None = None
+    fundings: list[Funding] | None = None
+    references: list[Reference] | None = None
+    instruments: list[Instrument] | None = None
+    offsetX: float | None = None
+    offsetY: float | None = None
 
 
 class CampaignStore(BaseModel):
-    campaigns: List[str]
+    campaigns: list[str]

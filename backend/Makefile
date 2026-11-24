@@ -1,13 +1,18 @@
 env_path=../.env
 
 install:
-	poetry install
+	uv sync
 
 run:
-	poetry run dotenv -f "$(env_path)" run uvicorn api.main:app --reload
+	uv run dotenv -f "$(env_path)" run uvicorn api.main:app --reload
 
 lint:
-	poetry run pre-commit run --all-files
+	uv run ruff check .
+	uv run ruff format --check .
+
+format:
+	uv run ruff check --fix .
+	uv run ruff format .
 
 redis-up:
 	docker compose up -d redis

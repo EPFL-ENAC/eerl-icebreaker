@@ -5,7 +5,7 @@ help: ## Show this help
 
 install: install-backend install-frontend ## Install backend and frontend dependencies
 
-install-backend: ## Install backend dependencies (poetry)
+install-backend: ## Install backend dependencies (uv)
 	$(MAKE) -C backend install
 
 install-frontend: ## Install frontend dependencies (npm)
