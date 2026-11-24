@@ -11,6 +11,7 @@ jobs:
     secrets:
       token: ${{ secrets.CD_TOKEN }}
     with:
+      skip_vulnerability_scan: false
       org: epfl-eerl
       repo: icebreaker
       build_context: '["./backend", "./frontend"]'
