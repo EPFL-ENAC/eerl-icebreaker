@@ -1,14 +1,14 @@
 FROM python:3.11-bookworm
-ENV POETRY_VERSION=2.4.1
-RUN pip install "poetry==$POETRY_VERSION"
-ENV PYTHONPATH="$PYTHONPATH:/app"
+COPY --from=ghcr.io/astral-sh/uv:0.9 /uv /bin/uv
+ENV PYTHONPATH="$PYTHONPATH:/app" \
+    UV_PROJECT_ENVIRONMENT=/usr/local \
+    UV_COMPILE_BYTECODE=1 \
+    UV_LINK_MODE=copy
 
 WORKDIR /app
 
-COPY poetry.lock pyproject.toml /app/
-RUN poetry config installer.max-workers 10
-RUN poetry config virtualenvs.create false
-RUN poetry install --no-interaction --no-root
+COPY uv.lock pyproject.toml /app/
+RUN uv sync --locked --no-dev --no-install-project
 
 COPY start.sh /app/
 COPY api /app/api

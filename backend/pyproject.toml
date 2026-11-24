@@ -1,24 +1,36 @@
-[tool.poetry]
+[project]
 name = "icebreaker-api"
 version = "0.1.0"
 description = ""
-authors = ["ymarcon <yannick.marcon@epfl.ch>"]
+authors = [{name = "ymarcon", email = "yannick.marcon@epfl.ch"}]
 readme = "README.md"
-packages = [{include = "api"}]
+requires-python = ">=3.11,<4"
+dependencies = [
+    "fastapi>=0.115.4,<1.0",
+    "pydantic-settings>=2.4.0,<3",
+    "uvicorn>=0.32.0,<0.33",
+    "python-multipart>=0.0.31",
+    "redis>=5.2.0,<6",
+    "fastapi-cache2>=0.2.2,<0.3",
+    "jinja2>=3.1.6,<4", # imported by fastapi-cache2 via starlette.templating
+    "enacit4r-files[images]",
+    "enacit4r-auth",
+]
 
-[tool.poetry.dependencies]
-python = "^3.11"
-fastapi = ">=0.115.4,<1.0"
-pydantic-settings = "^2.4.0"
-uvicorn = "^0.32.0"
-python-multipart = ">=0.0.31"
-redis = "^5.2.0"
-fastapi-cache2 = "^0.2.2"
-jinja2 = "^3.1.6" # imported by fastapi-cache2 via starlette.templating
-enacit4r-files = {git = "https://github.com/EPFL-ENAC/enacit4r-files", rev = "1.4.1", extras = ["images"]}
-enacit4r-auth = {git = "https://github.com/EPFL-ENAC/enacit4r-auth", rev = "0.8.0"}
+[dependency-groups]
+dev = ["ruff>=0.17"]
 
+[tool.uv]
+package = false
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.uv.sources]
+enacit4r-files = {git = "https://github.com/EPFL-ENAC/enacit4r-files", tag = "1.4.1"}
+enacit4r-auth = {git = "https://github.com/EPFL-ENAC/enacit4r-auth", tag = "0.8.0"}
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP"]
+ignore = ["B008"] # FastAPI Depends()/Query() in defaults
