@@ -15,19 +15,9 @@ Based loosely on https://github.com/gauravgola96/FastAPI-Example
 API for uploading object(.png|.jpg) to S3 bucket asynchronously
 -> convert png or jpg to webp files
 
-Create a file .env and put all s3 credential here
+Create a `.env` file at the repo root and fill in the Keycloak, S3 and map credentials:
 ```
-.env
-```
-s3 credentials 
-
-```
-S3_ACCESS_KEY_ID=
-S3_SECRET_ACCESS_KEY=
-S3_REGION = 
-S3_BUCKET = 
-S3_PATH_PREFIX = 
-
+cp ../.env.example ../.env
 ```
 
 

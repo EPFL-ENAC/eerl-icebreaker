@@ -652,26 +652,21 @@
                 />
                 <div class="text-bold q-mb-md">{{ t('published_datasets') }}</div>
                 <div v-for="(dataset, j) in measure.datasets" :key="j" class="q-mb-sm">
-                  <table class="full-width">
-                    <tr>
-                      <td>
-                        <q-input
-                          v-model="measure.datasets[j]"
-                          filled
-                        />
-                      </td>
-                      <td>
-                        <q-btn
-                          color="secondary"
-                          icon="delete"
-                          dense
-                          flat
-                          size="sm"
-                          class="q-ml-sm"
-                          @click="measure.datasets.splice(j, 1)" />
-                      </td>
-                    </tr>
-                  </table>
+                  <div class="row items-center no-wrap">
+                    <q-input
+                      v-model="measure.datasets[j]"
+                      filled
+                      class="col"
+                    />
+                    <q-btn
+                      color="secondary"
+                      icon="delete"
+                      dense
+                      flat
+                      size="sm"
+                      class="q-ml-sm"
+                      @click="measure.datasets.splice(j, 1)" />
+                  </div>
                 </div>
                 <div>
                   <q-btn
