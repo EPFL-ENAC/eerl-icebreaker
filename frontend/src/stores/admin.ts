@@ -22,9 +22,12 @@ export const useAdminStore = defineStore('admin', () => {
   async function uploadTmpFile(file: FileObject): Promise<FileRef> {
     const formData = new FormData();
     formData.append('files', file);
+    if (!authStore.isAuthenticated) return Promise.reject('Not authenticated');
+    await authStore.updateToken();
     return api.post('/files/tmp', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
+        Authorization: `Bearer ${authStore.accessToken}`,
       },
     }).then((res) => res.data && res.data.length ? res.data[0] : null);
   }

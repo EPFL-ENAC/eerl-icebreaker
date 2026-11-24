@@ -43,7 +43,8 @@ async def get_file(file_path: str,
              description="Upload any assets to S3",
              dependencies=[Depends(size_checker)])
 async def upload_temp_files(
-        files: list[UploadFile] = File(description="multiple file upload")):
+        files: list[UploadFile] = File(description="multiple file upload"),
+        user: User = Depends(kc_service.require_admin())):
     current_time = datetime.datetime.now()
     # generate unique name for the files' base folder in S3
     folder_name = str(current_time.timestamp()).replace('.', '')
