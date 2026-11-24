@@ -173,9 +173,9 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { Campaign } from 'src/models';
-import { cdnUrl } from 'src/boot/api';
-import { formatCoordinates } from 'src/utils/numbers';
+import { Campaign } from '@/models';
+import { cdnUrl } from '@/boot/api';
+import { formatCoordinates } from '@/utils/numbers';
 
 const { t } = useI18n();
 

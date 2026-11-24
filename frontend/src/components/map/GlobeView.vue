@@ -53,7 +53,7 @@ export default defineComponent({
 <script setup lang="ts">
 import { LabelStyle, Viewer, Cartesian3, PolylineOutlineMaterialProperty, Color, defined, HorizontalOrigin, Cartesian2 } from 'cesium';
 import 'cesium/Build/Cesium/Widgets/widgets.css';
-import { Campaign } from 'src/models';
+import { Campaign } from '@/models';
 import { CsvLine } from '../models';
 
 const { t } = useI18n();

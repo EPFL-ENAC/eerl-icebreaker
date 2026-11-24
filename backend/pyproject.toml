@@ -7,21 +7,16 @@ readme = "README.md"
 packages = [{include = "api"}]
 
 [tool.poetry.dependencies]
-python = "^3.10"
-fastapi = "^0.115.4"
-pyproj = "^3.6.1"
-requests = "^2.32.3"
+python = "^3.11"
+fastapi = ">=0.115.4,<1.0"
 pydantic-settings = "^2.4.0"
-dynaconf = "^3.2.6"
-timezonefinder = "^6.5.2"
-pandas = "^2.2.2"
-openpyxl = "^3.1.5"
 uvicorn = "^0.32.0"
-python-multipart = "^0.0.17"
+python-multipart = ">=0.0.31"
 redis = "^5.2.0"
 fastapi-cache2 = "^0.2.2"
-enacit4r-files = {git = "https://github.com/EPFL-ENAC/enacit4r-files", rev = "0.4.0"}
-enacit4r-auth = {git = "https://github.com/EPFL-ENAC/enacit4r-auth", rev = "0.1.0"}
+jinja2 = "^3.1.6" # imported by fastapi-cache2 via starlette.templating
+enacit4r-files = {git = "https://github.com/EPFL-ENAC/enacit4r-files", rev = "1.4.1", extras = ["images"]}
+enacit4r-auth = {git = "https://github.com/EPFL-ENAC/enacit4r-auth", rev = "0.8.0"}
 
 
 [build-system]

@@ -88,11 +88,11 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import IntroductionMd from 'src/assets/introduction.md';
-import essentialLinks from 'src/assets/links.json';
-import EssentialLink from 'src/components/EssentialLink.vue';
-import SimpleDialog from 'src/components/SimpleDialog.vue';
-import { Settings } from 'src/stores/settings';
+import IntroductionMd from '@/assets/introduction.md';
+import essentialLinks from '@/assets/links.json';
+import EssentialLink from '@/components/EssentialLink.vue';
+import SimpleDialog from '@/components/SimpleDialog.vue';
+import { Settings } from '@/stores/settings';
 
 const { t } = useI18n();
 

@@ -731,9 +731,9 @@ export default defineComponent({
 });
 </script>
 <script setup lang="ts">
-import { Campaign, Funding, Reference, Instrument, FileRef } from 'src/models';
-import { cdnUrl } from 'src/boot/api';
-import { FileObject } from 'src/components/models';
+import { Campaign, Funding, Reference, Instrument, FileRef } from '@/models';
+import { cdnUrl } from '@/boot/api';
+import { FileObject } from '@/components/models';
 
 const { t } = useI18n();
 

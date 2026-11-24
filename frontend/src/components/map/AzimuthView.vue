@@ -20,12 +20,12 @@ import { fromLonLat, get } from 'ol/proj';
 import { Feature } from 'ol';
 import { Point, LineString } from 'ol/geom';
 import { Style, Circle, Fill, Stroke, Text } from 'ol/style';
-import { Campaign } from 'src/models';
+import { Campaign } from '@/models';
 import VectorSource from 'ol/source/Vector';
 import VectorLayer from 'ol/layer/Vector';
 import Select from 'ol/interaction/Select';
 import { Attribution } from 'ol/control';
-import { CsvLine } from 'src/components/models';
+import { CsvLine } from '@/components/models';
 
 interface Props {
   id: string;

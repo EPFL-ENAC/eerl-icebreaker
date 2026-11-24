@@ -157,8 +157,8 @@
 </template>
 
 <script setup lang="ts">
-import CampaignForm from 'src/components/admin/CampaignForm.vue';
-import { notifyError } from 'src/utils/notify';
+import CampaignForm from '@/components/admin/CampaignForm.vue';
+import { notifyError } from '@/utils/notify';
 
 const { t } = useI18n();
 const authStore = useAuthStore();

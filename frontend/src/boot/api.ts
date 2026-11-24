@@ -1,11 +1,11 @@
-import { boot } from 'quasar/wrappers';
+import { defineBoot } from '#q-app';
 import axios, { AxiosInstance } from 'axios';
 import Keycloak from 'keycloak-js';
 
 const keycloak = new Keycloak({
     url: 'https://enac-it-sso.epfl.ch/',
     realm: 'EERL',
-    clientId: process.env.AUTH_CLIENT_ID
+    clientId: import.meta.env.AUTH_CLIENT_ID
 });
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -16,13 +16,13 @@ declare module '@vue/runtime-core' {
 
 const cdnUrl = 'https://enacit4r-cdn.epfl.ch';
 
-const baseUrl = `${process.env.API_URL}${process.env.API_PATH}`;
+const baseUrl = `${import.meta.env.API_URL}${import.meta.env.API_PATH}`;
 
 const api = axios.create({
   baseURL: baseUrl,
 });
 
-export default boot(({ app }) => {
+export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 
   app.config.globalProperties.$axios = axios;

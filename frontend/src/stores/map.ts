@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
-import { Campaign } from 'src/models';
-import { api, cdnUrl } from 'src/boot/api';
-import { CsvLine, CsvParseCallback } from 'src/components/models';
+import { Campaign } from '@/models';
+import { api, cdnUrl } from '@/boot/api';
+import { CsvLine, CsvParseCallback } from '@/components/models';
 import Papa from 'papaparse';
 import { Ion } from 'cesium';
 

@@ -1,7 +1,7 @@
-import { boot } from 'quasar/wrappers';
+import { defineBoot } from '#q-app';
 import { createI18n } from 'vue-i18n';
 
-import messages from 'src/i18n';
+import messages from '@/i18n';
 
 export type MessageLanguages = keyof typeof messages;
 // Type-define 'en-US' as the master schema for the resource
@@ -29,7 +29,7 @@ const i18n = createI18n({
 
 const t = i18n.global.t;
 
-export default boot(({ app }) => {
+export default defineBoot(({ app }) => {
   // Set i18n instance on app
   app.use(i18n);
 });
