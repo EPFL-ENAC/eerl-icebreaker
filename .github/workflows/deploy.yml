@@ -19,3 +19,4 @@ jobs:
         API_URL=https://eerl-campaigns.epfl.ch
         API_PATH=/api
         AUTH_CLIENT_ID=icebreaker-ui
+        AUTH_API_CLIENT_ID=icebreaker-api

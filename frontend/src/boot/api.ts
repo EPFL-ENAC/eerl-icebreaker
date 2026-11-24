@@ -3,8 +3,8 @@ import axios, { AxiosInstance } from 'axios';
 import Keycloak from 'keycloak-js';
 
 const keycloak = new Keycloak({
-    url: 'https://enac-it-sso.epfl.ch/',
-    realm: 'EERL',
+    url: 'https://enac-it-sso2.epfl.ch/',
+    realm: 'EPFL_inside',
     clientId: import.meta.env.AUTH_CLIENT_ID
 });
 declare module '@vue/runtime-core' {
@@ -13,6 +13,9 @@ declare module '@vue/runtime-core' {
     $api: AxiosInstance;
   }
 }
+
+// the app roles are client roles of the API client
+const authApiClientId = import.meta.env.AUTH_API_CLIENT_ID;
 
 const cdnUrl = 'https://enacit4r-cdn.epfl.ch';
 
@@ -34,4 +37,4 @@ export default defineBoot(({ app }) => {
   //       so you can easily perform requests against your app's API
 });
 
-export { api, baseUrl, cdnUrl, keycloak };
+export { api, authApiClientId, baseUrl, cdnUrl, keycloak };
