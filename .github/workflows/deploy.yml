@@ -1,0 +1,21 @@
+# https://github.com/EPFL-ENAC/epfl-enac-build-push-deploy-action#readme
+name: deploy
+
+'on':
+  push:
+    tags: ['v*.*.*']
+
+jobs:
+  deploy:
+    uses: EPFL-ENAC/epfl-enac-build-push-deploy-action/.github/workflows/deploy.yml@v4.2.0
+    secrets:
+      token: ${{ secrets.CD_TOKEN }}
+    with:
+      org: epfl-eerl
+      repo: icebreaker
+      build_context: '["./backend", "./frontend"]'
+      # The frontend bakes its config at build time (prod only).
+      build_args: |
+        API_URL=https://eerl-campaigns.epfl.ch
+        API_PATH=/api
+        AUTH_CLIENT_ID=icebreaker-ui
